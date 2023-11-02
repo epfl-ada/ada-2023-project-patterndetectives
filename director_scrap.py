@@ -1,7 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
 import re
-import numpy as np
 
 def director_scrap(pageid):
     # Make the request
@@ -22,13 +20,18 @@ def director_scrap(pageid):
     wikitext = data['query']['pages'][str(pageid)]['revisions'][0]['*']
 
     # Use a regular expression to extract the director's name
-    match = re.search(r'\| director\s*=\s*\[\[([^\]]+)\]\]', wikitext)
+    pattern = r'\|\s*director\s*=\s*(?:(?:{{(?:ubl|Plainlist)\|)?\[\[)?([^\]|<\n\[{]+)'
+    match = re.search(pattern, wikitext)
+
     if match:
-        director = match.group(1)
-        # Split the director string on '|' and take the latter part if '|' exists.
-        director = director.split('|')[-1]
-        print(f"Director of the movie is: {director}")
+        director = match.group(1).split('|')[-1].strip()
+
+        # Clean up the name to remove any content within parentheses
+        director = re.sub(r'\s*\([^)]+\)', '', director)
+
+        if not director:  # Check if the extracted director name is empty
+            return None
+
         return director
     else:
-        print(f"Director not found")
         return None
