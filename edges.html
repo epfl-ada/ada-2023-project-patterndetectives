@@ -1,0 +1,1061 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 500px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 500px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="Alan Rickman">Alan Rickman</option>
+                                
+                                    <option value="Maggie Smith">Maggie Smith</option>
+                                
+                                    <option value="Rupert Grint">Rupert Grint</option>
+                                
+                                    <option value="Tom Felton">Tom Felton</option>
+                                
+                                    <option value="Geraldine Somerville">Geraldine Somerville</option>
+                                
+                                    <option value="Bonnie Wright">Bonnie Wright</option>
+                                
+                                    <option value="Warwick Davis">Warwick Davis</option>
+                                
+                                    <option value="Daniel Radcliffe">Daniel Radcliffe</option>
+                                
+                                    <option value="Emma Watson">Emma Watson</option>
+                                
+                                    <option value="Robbie Coltrane">Robbie Coltrane</option>
+                                
+                                    <option value="Matthew David Lewis">Matthew David Lewis</option>
+                                
+                                    <option value="Mark Williams">Mark Williams</option>
+                                
+                                    <option value="Joshua Herdman">Joshua Herdman</option>
+                                
+                                    <option value="Devon Murray">Devon Murray</option>
+                                
+                                    <option value="David Bradley">David Bradley</option>
+                                
+                                    <option value="Alfred Enoch">Alfred Enoch</option>
+                                
+                                    <option value="Michael Gambon">Michael Gambon</option>
+                                
+                                    <option value="Oliver Phelps">Oliver Phelps</option>
+                                
+                                    <option value="Jamie Waylett">Jamie Waylett</option>
+                                
+                                    <option value="James Phelps">James Phelps</option>
+                                
+                                    <option value="Julie Walters">Julie Walters</option>
+                                
+                                    <option value="Harry Melling">Harry Melling</option>
+                                
+                                    <option value="Fiona Shaw">Fiona Shaw</option>
+                                
+                                    <option value="Richard Griffiths">Richard Griffiths</option>
+                                
+                                    <option value="Timothy Spall">Timothy Spall</option>
+                                
+                                    <option value="Chris Rankin">Chris Rankin</option>
+                                
+                                    <option value="Adrian Rawlins">Adrian Rawlins</option>
+                                
+                                    <option value="David Thewlis">David Thewlis</option>
+                                
+                                    <option value="Katie Leung">Katie Leung</option>
+                                
+                                    <option value="Jason Isaacs">Jason Isaacs</option>
+                                
+                                    <option value="Ikue Otani">Ikue Otani</option>
+                                
+                                    <option value="Adam Sandler">Adam Sandler</option>
+                                
+                                    <option value="Rachael Lillis">Rachael Lillis</option>
+                                
+                                    <option value="Eric Stuart">Eric Stuart</option>
+                                
+                                    <option value="Veronica Taylor">Veronica Taylor</option>
+                                
+                                    <option value="Shinichiro Miki">Shinichiro Miki</option>
+                                
+                                    <option value="Maddie Blaustein">Maddie Blaustein</option>
+                                
+                                    <option value="Allen Covert">Allen Covert</option>
+                                
+                                    <option value="Kayzie Rogers">Kayzie Rogers</option>
+                                
+                                    <option value="David Graf">David Graf</option>
+                                
+                                    <option value="Michael Winslow">Michael Winslow</option>
+                                
+                                    <option value="William Shatner">William Shatner</option>
+                                
+                                    <option value="Leonard Nimoy">Leonard Nimoy</option>
+                                
+                                    <option value="Walter Koenig">Walter Koenig</option>
+                                
+                                    <option value="Nichelle Nichols">Nichelle Nichols</option>
+                                
+                                    <option value="Tara Sands">Tara Sands</option>
+                                
+                                    <option value="DeForest Kelley">DeForest Kelley</option>
+                                
+                                    <option value="James Doohan">James Doohan</option>
+                                
+                                    <option value="George Gaynes">George Gaynes</option>
+                                
+                                    <option value="Ted Lewis">Ted Lewis</option>
+                                
+                                    <option value="George Takei">George Takei</option>
+                                
+                                    <option value="Rob Schneider">Rob Schneider</option>
+                                
+                                    <option value="Bubba Smith">Bubba Smith</option>
+                                
+                                    <option value="Kevin Smith">Kevin Smith</option>
+                                
+                                    <option value="Ben Affleck">Ben Affleck</option>
+                                
+                                    <option value="Cheech Marin">Cheech Marin</option>
+                                
+                                    <option value="Amy Birnbaum">Amy Birnbaum</option>
+                                
+                                    <option value="Leslie Easterbrook">Leslie Easterbrook</option>
+                                
+                                    <option value="Frank Oz">Frank Oz</option>
+                                
+                                    <option value="Brian O'Halloran">Brian O'Halloran</option>
+                                
+                                    <option value="Steve Buscemi">Steve Buscemi</option>
+                                
+                                    <option value="John Wayne">John Wayne</option>
+                                
+                                    <option value="Helena Bonham Carter">Helena Bonham Carter</option>
+                                
+                                    <option value="Eugene Levy">Eugene Levy</option>
+                                
+                                    <option value="Jason Mewes">Jason Mewes</option>
+                                
+                                    <option value="Matt Damon">Matt Damon</option>
+                                
+                                    <option value="G. W. Bailey">G. W. Bailey</option>
+                                
+                                    <option value="Jason Lee">Jason Lee</option>
+                                
+                                    <option value="Jennifer Coolidge">Jennifer Coolidge</option>
+                                
+                                    <option value="Marion Ramsey">Marion Ramsey</option>
+                                
+                                    <option value="John Cho">John Cho</option>
+                                
+                                    <option value="Julia Roberts">Julia Roberts</option>
+                                
+                                    <option value="Jerry Nelson">Jerry Nelson</option>
+                                
+                                    <option value="Danny Trejo">Danny Trejo</option>
+                                
+                                    <option value="Ben Stiller">Ben Stiller</option>
+                                
+                                    <option value="Steve Whitmire">Steve Whitmire</option>
+                                
+                                    <option value="Dave Goelz">Dave Goelz</option>
+                                
+                                    <option value="Rica Matsumoto">Rica Matsumoto</option>
+                                
+                                    <option value="Megumi Hayashibara">Megumi Hayashibara</option>
+                                
+                                    <option value="Peter Dante">Peter Dante</option>
+                                
+                                    <option value="Ralph Fiennes">Ralph Fiennes</option>
+                                
+                                    <option value="Dom DeLuise">Dom DeLuise</option>
+                                
+                                    <option value="Christopher Knights">Christopher Knights</option>
+                                
+                                    <option value="Burt Young">Burt Young</option>
+                                
+                                    <option value="Conrad Vernon">Conrad Vernon</option>
+                                
+                                    <option value="Nick Swardson">Nick Swardson</option>
+                                
+                                    <option value="Tony Burton">Tony Burton</option>
+                                
+                                    <option value="Frank Welker">Frank Welker</option>
+                                
+                                    <option value="Seann William Scott">Seann William Scott</option>
+                                
+                                    <option value="Robert De Niro">Robert De Niro</option>
+                                
+                                    <option value="Antonio Banderas">Antonio Banderas</option>
+                                
+                                    <option value="Sylvester Stallone">Sylvester Stallone</option>
+                                
+                                    <option value="John Cusack">John Cusack</option>
+                                
+                                    <option value="Tobin Bell">Tobin Bell</option>
+                                
+                                    <option value="Talia Shire">Talia Shire</option>
+                                
+                                    <option value="Jonah Hill">Jonah Hill</option>
+                                
+                                    <option value="Freddie Prinze, Jr.">Freddie Prinze, Jr.</option>
+                                
+                                    <option value="Alyson Hannigan">Alyson Hannigan</option>
+                                
+                                    <option value="James Stewart">James Stewart</option>
+                                
+                                    <option value="Fred Willard">Fred Willard</option>
+                                
+                                    <option value="Ginger Rogers">Ginger Rogers</option>
+                                
+                                    <option value="Yûji Ueda">Yûji Ueda</option>
+                                
+                                    <option value="Jim Cummings">Jim Cummings</option>
+                                
+                                    <option value="Johnny Depp">Johnny Depp</option>
+                                
+                                    <option value="George Clooney">George Clooney</option>
+                                
+                                    <option value="Seth Rogen">Seth Rogen</option>
+                                
+                                    <option value="Jack Black">Jack Black</option>
+                                
+                                    <option value="Koichi Yamadera">Koichi Yamadera</option>
+                                
+                                    <option value="Rob Paulsen">Rob Paulsen</option>
+                                
+                                    <option value="Chris Miller">Chris Miller</option>
+                                
+                                    <option value="Jason Biggs">Jason Biggs</option>
+                                
+                                    <option value="Kenny Baker">Kenny Baker</option>
+                                
+                                    <option value="Cody Cameron">Cody Cameron</option>
+                                
+                                    <option value="Burt Reynolds">Burt Reynolds</option>
+                                
+                                    <option value="Anthony Daniels">Anthony Daniels</option>
+                                
+                                    <option value="Robert Woolsey">Robert Woolsey</option>
+                                
+                                    <option value="Madeline Kahn">Madeline Kahn</option>
+                                
+                                    <option value="Kevin Nealon">Kevin Nealon</option>
+                                
+                                    <option value="Woody Allen">Woody Allen</option>
+                                
+                                    <option value="Salma Hayek">Salma Hayek</option>
+                                
+                                    <option value="Harvey Keitel">Harvey Keitel</option>
+                                
+                                    <option value="Tim Robbins">Tim Robbins</option>
+                                
+                                    <option value="Blake Clark">Blake Clark</option>
+                                
+                                    <option value="Brad Pitt">Brad Pitt</option>
+                                
+                                    <option value="Betsy Russell">Betsy Russell</option>
+                                
+                                    <option value="Costas Mandylor">Costas Mandylor</option>
+                                
+                                    <option value="Bill Hader">Bill Hader</option>
+                                
+                                    <option value="Norm Macdonald">Norm Macdonald</option>
+                                
+                                    <option value="Jonathan Loughran">Jonathan Loughran</option>
+                                
+                                    <option value="Shawn Wayans">Shawn Wayans</option>
+                                
+                                    <option value="Vince Vaughn">Vince Vaughn</option>
+                                
+                                    <option value="Ted Raimi">Ted Raimi</option>
+                                
+                                    <option value="Tom Towles">Tom Towles</option>
+                                
+                                    <option value="Ward Bond">Ward Bond</option>
+                                
+                                    <option value="Kevin James">Kevin James</option>
+                                
+                                    <option value="Mel Brooks">Mel Brooks</option>
+                                
+                                    <option value="John Travolta">John Travolta</option>
+                                
+                                    <option value="Will Ferrell">Will Ferrell</option>
+                                
+                                    <option value="David Spade">David Spade</option>
+                                
+                                    <option value="John Ratzenberger">John Ratzenberger</option>
+                                
+                                    <option value="William H. Macy">William H. Macy</option>
+                                
+                                    <option value="Sarah Michelle Gellar">Sarah Michelle Gellar</option>
+                                
+                                    <option value="John Candy">John Candy</option>
+                                
+                                    <option value="Lisa Roberts Gillan">Lisa Roberts Gillan</option>
+                                
+                                    <option value="Jessica Tandy">Jessica Tandy</option>
+                                
+                                    <option value="Percy Kilbride">Percy Kilbride</option>
+                                
+                                    <option value="David Arquette">David Arquette</option>
+                                
+                                    <option value="Kristen Wiig">Kristen Wiig</option>
+                                
+                                    <option value="Kath Soucie">Kath Soucie</option>
+                                
+                                    <option value="James Earl Jones">James Earl Jones</option>
+                                
+                                    <option value="Patty Hearst">Patty Hearst</option>
+                                
+                                    <option value="Leo G. Carroll">Leo G. Carroll</option>
+                                
+                                    <option value="Mark Margolis">Mark Margolis</option>
+                                
+                                    <option value="Daryl Sabara">Daryl Sabara</option>
+                                
+                                    <option value="Ned Beatty">Ned Beatty</option>
+                                
+                                    <option value="Jay C. Flippen">Jay C. Flippen</option>
+                                
+                                    <option value="Rob Lowe">Rob Lowe</option>
+                                
+                                    <option value="Peter Cullen">Peter Cullen</option>
+                                
+                                    <option value="Matthew Lillard">Matthew Lillard</option>
+                                
+                                    <option value="Lucille Ball">Lucille Ball</option>
+                                
+                                    <option value="Gordon MacRae">Gordon MacRae</option>
+                                
+                                    <option value="Nelson Eddy">Nelson Eddy</option>
+                                
+                                    <option value="Stanley Tucci">Stanley Tucci</option>
+                                
+                                    <option value="Emma Thompson">Emma Thompson</option>
+                                
+                                    <option value="Tony Shalhoub">Tony Shalhoub</option>
+                                
+                                    <option value="Robert Picardo">Robert Picardo</option>
+                                
+                                    <option value="Dean Martin">Dean Martin</option>
+                                
+                                    <option value="Jeanette MacDonald">Jeanette MacDonald</option>
+                                
+                                    <option value="Wheeler & Woolsey">Wheeler & Woolsey</option>
+                                
+                                    <option value="Martin Scorsese">Martin Scorsese</option>
+                                
+                                    <option value="Doris Day">Doris Day</option>
+                                
+                                    <option value="Catherine O'Hara">Catherine O'Hara</option>
+                                
+                                    <option value="Carla Gallo">Carla Gallo</option>
+                                
+                                    <option value="Richard Jenkins">Richard Jenkins</option>
+                                
+                                    <option value="Amy Stiller">Amy Stiller</option>
+                                
+                                    <option value="Dick Miller">Dick Miller</option>
+                                
+                                    <option value="Gary Oldman">Gary Oldman</option>
+                                
+                                    <option value="Christopher Lee">Christopher Lee</option>
+                                
+                                    <option value="David Koechner">David Koechner</option>
+                                
+                                    <option value="Diane Keaton">Diane Keaton</option>
+                                
+                                    <option value="Harry Morgan">Harry Morgan</option>
+                                
+                                    <option value="Jon Favreau">Jon Favreau</option>
+                                
+                                    <option value="Walter Matthau">Walter Matthau</option>
+                                
+                                    <option value="Casey Affleck">Casey Affleck</option>
+                                
+                                    <option value="Bruce Campbell">Bruce Campbell</option>
+                                
+                                    <option value="Marlon Wayans">Marlon Wayans</option>
+                                
+                                    <option value="Dorothy Lee">Dorothy Lee</option>
+                                
+                                    <option value="Jeremy Piven">Jeremy Piven</option>
+                                
+                                    <option value="Eddie Kaye Thomas">Eddie Kaye Thomas</option>
+                                
+                                    <option value="Jack Lemmon">Jack Lemmon</option>
+                                
+                                    <option value="Bud Abbott">Bud Abbott</option>
+                                
+                                    <option value="Joan Cusack">Joan Cusack</option>
+                                
+                                    <option value="Mia Farrow">Mia Farrow</option>
+                                
+                                    <option value="Fred Astaire">Fred Astaire</option>
+                                
+                                    <option value="Jeff Bennett">Jeff Bennett</option>
+                                
+                                    <option value="Joe Pesci">Joe Pesci</option>
+                                
+                                    <option value="Mike Myers">Mike Myers</option>
+                                
+                                    <option value="John Goodman">John Goodman</option>
+                                
+                                    <option value="Lou Costello">Lou Costello</option>
+                                
+                                    <option value="Victor Argo">Victor Argo</option>
+                                
+                                    <option value="Paul Fix">Paul Fix</option>
+                                
+                                    <option value="Owen Wilson">Owen Wilson</option>
+                                
+                                    <option value="Tommy Chong">Tommy Chong</option>
+                                
+                                    <option value="Jerry Lewis">Jerry Lewis</option>
+                                
+                                    <option value="Shawnee Smith">Shawnee Smith</option>
+                                
+                                    <option value="Bill Moseley">Bill Moseley</option>
+                                
+                                    <option value="Ethan Suplee">Ethan Suplee</option>
+                                
+                                    <option value="Harry Carey, Jr.">Harry Carey, Jr.</option>
+                                
+                                    <option value="Bonnie Hunt">Bonnie Hunt</option>
+                                
+                                    <option value="James Gandolfini">James Gandolfini</option>
+                                
+                                    <option value="John Turturro">John Turturro</option>
+                                
+                                    <option value="Cloris Leachman">Cloris Leachman</option>
+                                
+                                    <option value="Ricky Jay">Ricky Jay</option>
+                                
+                                    <option value="Hume Cronyn">Hume Cronyn</option>
+                                
+                                    <option value="Marjorie Main">Marjorie Main</option>
+                                
+                                    <option value="Courteney Cox">Courteney Cox</option>
+                                
+                                    <option value="Harrison Ford">Harrison Ford</option>
+                                
+                                    <option value="Mink Stole">Mink Stole</option>
+                                
+                                    <option value="Alfred Hitchcock">Alfred Hitchcock</option>
+                                
+                                    <option value="Bruce Cabot">Bruce Cabot</option>
+                                
+                                    <option value="Abraham Aronofsky">Abraham Aronofsky</option>
+                                
+                                    <option value="Robert Hardy">Robert Hardy</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "Alan Rickman", "label": "Alan Rickman", "shape": "dot", "size": 33}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Maggie Smith", "label": "Maggie Smith", "shape": "dot", "size": 30}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Rupert Grint", "label": "Rupert Grint", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tom Felton", "label": "Tom Felton", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Geraldine Somerville", "label": "Geraldine Somerville", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bonnie Wright", "label": "Bonnie Wright", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Warwick Davis", "label": "Warwick Davis", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Daniel Radcliffe", "label": "Daniel Radcliffe", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Emma Watson", "label": "Emma Watson", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Robbie Coltrane", "label": "Robbie Coltrane", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Matthew David Lewis", "label": "Matthew David Lewis", "shape": "dot", "size": 29}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Mark Williams", "label": "Mark Williams", "shape": "dot", "size": 24}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Joshua Herdman", "label": "Joshua Herdman", "shape": "dot", "size": 23}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Devon Murray", "label": "Devon Murray", "shape": "dot", "size": 23}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "David Bradley", "label": "David Bradley", "shape": "dot", "size": 22}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Alfred Enoch", "label": "Alfred Enoch", "shape": "dot", "size": 22}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Michael Gambon", "label": "Michael Gambon", "shape": "dot", "size": 21}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Oliver Phelps", "label": "Oliver Phelps", "shape": "dot", "size": 18}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jamie Waylett", "label": "Jamie Waylett", "shape": "dot", "size": 18}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "James Phelps", "label": "James Phelps", "shape": "dot", "size": 18}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Julie Walters", "label": "Julie Walters", "shape": "dot", "size": 16}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Harry Melling", "label": "Harry Melling", "shape": "dot", "size": 15}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Fiona Shaw", "label": "Fiona Shaw", "shape": "dot", "size": 15}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Richard Griffiths", "label": "Richard Griffiths", "shape": "dot", "size": 15}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Timothy Spall", "label": "Timothy Spall", "shape": "dot", "size": 14}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Chris Rankin", "label": "Chris Rankin", "shape": "dot", "size": 13}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Adrian Rawlins", "label": "Adrian Rawlins", "shape": "dot", "size": 13}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "David Thewlis", "label": "David Thewlis", "shape": "dot", "size": 13}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Katie Leung", "label": "Katie Leung", "shape": "dot", "size": 13}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jason Isaacs", "label": "Jason Isaacs", "shape": "dot", "size": 13}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ikue Otani", "label": "Ikue Otani", "shape": "dot", "size": 11}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Adam Sandler", "label": "Adam Sandler", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Rachael Lillis", "label": "Rachael Lillis", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Eric Stuart", "label": "Eric Stuart", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Veronica Taylor", "label": "Veronica Taylor", "shape": "dot", "size": 9}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Shinichiro Miki", "label": "Shinichiro Miki", "shape": "dot", "size": 8}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Maddie Blaustein", "label": "Maddie Blaustein", "shape": "dot", "size": 8}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Allen Covert", "label": "Allen Covert", "shape": "dot", "size": 7}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kayzie Rogers", "label": "Kayzie Rogers", "shape": "dot", "size": 7}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "David Graf", "label": "David Graf", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Michael Winslow", "label": "Michael Winslow", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "William Shatner", "label": "William Shatner", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Leonard Nimoy", "label": "Leonard Nimoy", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Walter Koenig", "label": "Walter Koenig", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Nichelle Nichols", "label": "Nichelle Nichols", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tara Sands", "label": "Tara Sands", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "DeForest Kelley", "label": "DeForest Kelley", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "James Doohan", "label": "James Doohan", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "George Gaynes", "label": "George Gaynes", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ted Lewis", "label": "Ted Lewis", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "George Takei", "label": "George Takei", "shape": "dot", "size": 6}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Rob Schneider", "label": "Rob Schneider", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bubba Smith", "label": "Bubba Smith", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kevin Smith", "label": "Kevin Smith", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ben Affleck", "label": "Ben Affleck", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Cheech Marin", "label": "Cheech Marin", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Amy Birnbaum", "label": "Amy Birnbaum", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Leslie Easterbrook", "label": "Leslie Easterbrook", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Frank Oz", "label": "Frank Oz", "shape": "dot", "size": 5}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Brian O\u0027Halloran", "label": "Brian O\u0027Halloran", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Steve Buscemi", "label": "Steve Buscemi", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Wayne", "label": "John Wayne", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Helena Bonham Carter", "label": "Helena Bonham Carter", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Eugene Levy", "label": "Eugene Levy", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jason Mewes", "label": "Jason Mewes", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Matt Damon", "label": "Matt Damon", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "G. W. Bailey", "label": "G. W. Bailey", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jason Lee", "label": "Jason Lee", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jennifer Coolidge", "label": "Jennifer Coolidge", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Marion Ramsey", "label": "Marion Ramsey", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Cho", "label": "John Cho", "shape": "dot", "size": 4}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Julia Roberts", "label": "Julia Roberts", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jerry Nelson", "label": "Jerry Nelson", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Danny Trejo", "label": "Danny Trejo", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ben Stiller", "label": "Ben Stiller", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Steve Whitmire", "label": "Steve Whitmire", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Dave Goelz", "label": "Dave Goelz", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Rica Matsumoto", "label": "Rica Matsumoto", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Megumi Hayashibara", "label": "Megumi Hayashibara", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Peter Dante", "label": "Peter Dante", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ralph Fiennes", "label": "Ralph Fiennes", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Dom DeLuise", "label": "Dom DeLuise", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Christopher Knights", "label": "Christopher Knights", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Burt Young", "label": "Burt Young", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Conrad Vernon", "label": "Conrad Vernon", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Nick Swardson", "label": "Nick Swardson", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tony Burton", "label": "Tony Burton", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Frank Welker", "label": "Frank Welker", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Seann William Scott", "label": "Seann William Scott", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Robert De Niro", "label": "Robert De Niro", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Antonio Banderas", "label": "Antonio Banderas", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Sylvester Stallone", "label": "Sylvester Stallone", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Cusack", "label": "John Cusack", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tobin Bell", "label": "Tobin Bell", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Talia Shire", "label": "Talia Shire", "shape": "dot", "size": 3}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jonah Hill", "label": "Jonah Hill", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Freddie Prinze, Jr.", "label": "Freddie Prinze, Jr.", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Alyson Hannigan", "label": "Alyson Hannigan", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "James Stewart", "label": "James Stewart", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Fred Willard", "label": "Fred Willard", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ginger Rogers", "label": "Ginger Rogers", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Y\u00fbji Ueda", "label": "Y\u00fbji Ueda", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jim Cummings", "label": "Jim Cummings", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Johnny Depp", "label": "Johnny Depp", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "George Clooney", "label": "George Clooney", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Seth Rogen", "label": "Seth Rogen", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jack Black", "label": "Jack Black", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Koichi Yamadera", "label": "Koichi Yamadera", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Rob Paulsen", "label": "Rob Paulsen", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Chris Miller", "label": "Chris Miller", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jason Biggs", "label": "Jason Biggs", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kenny Baker", "label": "Kenny Baker", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Cody Cameron", "label": "Cody Cameron", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Burt Reynolds", "label": "Burt Reynolds", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Anthony Daniels", "label": "Anthony Daniels", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Robert Woolsey", "label": "Robert Woolsey", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Madeline Kahn", "label": "Madeline Kahn", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kevin Nealon", "label": "Kevin Nealon", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Woody Allen", "label": "Woody Allen", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Salma Hayek", "label": "Salma Hayek", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Harvey Keitel", "label": "Harvey Keitel", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tim Robbins", "label": "Tim Robbins", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Blake Clark", "label": "Blake Clark", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Brad Pitt", "label": "Brad Pitt", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Betsy Russell", "label": "Betsy Russell", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Costas Mandylor", "label": "Costas Mandylor", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bill Hader", "label": "Bill Hader", "shape": "dot", "size": 2}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Norm Macdonald", "label": "Norm Macdonald", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jonathan Loughran", "label": "Jonathan Loughran", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Shawn Wayans", "label": "Shawn Wayans", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Vince Vaughn", "label": "Vince Vaughn", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ted Raimi", "label": "Ted Raimi", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tom Towles", "label": "Tom Towles", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ward Bond", "label": "Ward Bond", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kevin James", "label": "Kevin James", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Mel Brooks", "label": "Mel Brooks", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Travolta", "label": "John Travolta", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Will Ferrell", "label": "Will Ferrell", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "David Spade", "label": "David Spade", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Ratzenberger", "label": "John Ratzenberger", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "William H. Macy", "label": "William H. Macy", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Sarah Michelle Gellar", "label": "Sarah Michelle Gellar", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Candy", "label": "John Candy", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Lisa Roberts Gillan", "label": "Lisa Roberts Gillan", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jessica Tandy", "label": "Jessica Tandy", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Percy Kilbride", "label": "Percy Kilbride", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "David Arquette", "label": "David Arquette", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kristen Wiig", "label": "Kristen Wiig", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Kath Soucie", "label": "Kath Soucie", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "James Earl Jones", "label": "James Earl Jones", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Patty Hearst", "label": "Patty Hearst", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Leo G. Carroll", "label": "Leo G. Carroll", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Mark Margolis", "label": "Mark Margolis", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Daryl Sabara", "label": "Daryl Sabara", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ned Beatty", "label": "Ned Beatty", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jay C. Flippen", "label": "Jay C. Flippen", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Rob Lowe", "label": "Rob Lowe", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Peter Cullen", "label": "Peter Cullen", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Matthew Lillard", "label": "Matthew Lillard", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Lucille Ball", "label": "Lucille Ball", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Gordon MacRae", "label": "Gordon MacRae", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Nelson Eddy", "label": "Nelson Eddy", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Stanley Tucci", "label": "Stanley Tucci", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Emma Thompson", "label": "Emma Thompson", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tony Shalhoub", "label": "Tony Shalhoub", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Robert Picardo", "label": "Robert Picardo", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Dean Martin", "label": "Dean Martin", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jeanette MacDonald", "label": "Jeanette MacDonald", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Wheeler \u0026 Woolsey", "label": "Wheeler \u0026 Woolsey", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Martin Scorsese", "label": "Martin Scorsese", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Doris Day", "label": "Doris Day", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Catherine O\u0027Hara", "label": "Catherine O\u0027Hara", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Carla Gallo", "label": "Carla Gallo", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Richard Jenkins", "label": "Richard Jenkins", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Amy Stiller", "label": "Amy Stiller", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Dick Miller", "label": "Dick Miller", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Gary Oldman", "label": "Gary Oldman", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Christopher Lee", "label": "Christopher Lee", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "David Koechner", "label": "David Koechner", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Diane Keaton", "label": "Diane Keaton", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Harry Morgan", "label": "Harry Morgan", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jon Favreau", "label": "Jon Favreau", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Walter Matthau", "label": "Walter Matthau", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Casey Affleck", "label": "Casey Affleck", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bruce Campbell", "label": "Bruce Campbell", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Marlon Wayans", "label": "Marlon Wayans", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Dorothy Lee", "label": "Dorothy Lee", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jeremy Piven", "label": "Jeremy Piven", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Eddie Kaye Thomas", "label": "Eddie Kaye Thomas", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jack Lemmon", "label": "Jack Lemmon", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bud Abbott", "label": "Bud Abbott", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Joan Cusack", "label": "Joan Cusack", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Mia Farrow", "label": "Mia Farrow", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Fred Astaire", "label": "Fred Astaire", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jeff Bennett", "label": "Jeff Bennett", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Joe Pesci", "label": "Joe Pesci", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Mike Myers", "label": "Mike Myers", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Goodman", "label": "John Goodman", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Lou Costello", "label": "Lou Costello", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Victor Argo", "label": "Victor Argo", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Paul Fix", "label": "Paul Fix", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Owen Wilson", "label": "Owen Wilson", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Tommy Chong", "label": "Tommy Chong", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Jerry Lewis", "label": "Jerry Lewis", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Shawnee Smith", "label": "Shawnee Smith", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bill Moseley", "label": "Bill Moseley", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ethan Suplee", "label": "Ethan Suplee", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Harry Carey, Jr.", "label": "Harry Carey, Jr.", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bonnie Hunt", "label": "Bonnie Hunt", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "James Gandolfini", "label": "James Gandolfini", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "John Turturro", "label": "John Turturro", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Cloris Leachman", "label": "Cloris Leachman", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Ricky Jay", "label": "Ricky Jay", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Hume Cronyn", "label": "Hume Cronyn", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Marjorie Main", "label": "Marjorie Main", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Courteney Cox", "label": "Courteney Cox", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Harrison Ford", "label": "Harrison Ford", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Mink Stole", "label": "Mink Stole", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Alfred Hitchcock", "label": "Alfred Hitchcock", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Bruce Cabot", "label": "Bruce Cabot", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Abraham Aronofsky", "label": "Abraham Aronofsky", "shape": "dot", "size": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Robert Hardy", "label": "Robert Hardy", "shape": "dot", "size": 1}]);
+                  edges = new vis.DataSet([{"from": "Dean Martin", "to": "Jerry Lewis", "value": 16}, {"from": "Adam Sandler", "to": "Allen Covert", "value": 13}, {"from": "Frank Welker", "to": "Jim Cummings", "value": 12}, {"from": "Adam Sandler", "to": "Rob Schneider", "value": 12}, {"from": "Fred Astaire", "to": "Ginger Rogers", "value": 10}, {"from": "Geraldine Somerville", "to": "Maggie Smith", "value": 9}, {"from": "Cheech Marin", "to": "Tommy Chong", "value": 9}, {"from": "Alan Rickman", "to": "Warwick Davis", "value": 9}, {"from": "Ben Stiller", "to": "Owen Wilson", "value": 9}, {"from": "Eric Stuart", "to": "Veronica Taylor", "value": 9}, {"from": "Emma Watson", "to": "Geraldine Somerville", "value": 9}, {"from": "Emma Watson", "to": "Robbie Coltrane", "value": 9}, {"from": "Robbie Coltrane", "to": "Rupert Grint", "value": 8}, {"from": "Rupert Grint", "to": "Tom Felton", "value": 8}, {"from": "Dave Goelz", "to": "Frank Oz", "value": 8}, {"from": "John Wayne", "to": "Paul Fix", "value": 8}, {"from": "Maggie Smith", "to": "Matthew David Lewis", "value": 8}, {"from": "Eric Stuart", "to": "Rachael Lillis", "value": 8}, {"from": "Mia Farrow", "to": "Woody Allen", "value": 8}, {"from": "Emma Watson", "to": "Rupert Grint", "value": 8}, {"from": "Daniel Radcliffe", "to": "Maggie Smith", "value": 8}, {"from": "Maggie Smith", "to": "Tom Felton", "value": 8}, {"from": "Daniel Radcliffe", "to": "Rupert Grint", "value": 8}, {"from": "Emma Watson", "to": "Warwick Davis", "value": 8}, {"from": "Eric Stuart", "to": "Maddie Blaustein", "value": 8}, {"from": "Ikue Otani", "to": "Veronica Taylor", "value": 8}, {"from": "Emma Watson", "to": "Matthew David Lewis", "value": 8}, {"from": "Eric Stuart", "to": "Ikue Otani", "value": 8}, {"from": "Rupert Grint", "to": "Warwick Davis", "value": 8}, {"from": "Robbie Coltrane", "to": "Tom Felton", "value": 8}, {"from": "Emma Watson", "to": "Maggie Smith", "value": 8}, {"from": "Emma Watson", "to": "Tom Felton", "value": 8}, {"from": "Bonnie Wright", "to": "Robbie Coltrane", "value": 8}, {"from": "Tom Felton", "to": "Warwick Davis", "value": 8}, {"from": "Maggie Smith", "to": "Warwick Davis", "value": 8}, {"from": "Adam Sandler", "to": "Steve Buscemi", "value": 8}, {"from": "Daniel Radcliffe", "to": "Matthew David Lewis", "value": 8}, {"from": "Mark Williams", "to": "Tom Felton", "value": 8}, {"from": "Robbie Coltrane", "to": "Warwick Davis", "value": 8}, {"from": "Geraldine Somerville", "to": "Matthew David Lewis", "value": 8}, {"from": "Alan Rickman", "to": "Bonnie Wright", "value": 8}, {"from": "Rachael Lillis", "to": "Veronica Taylor", "value": 8}, {"from": "Geraldine Somerville", "to": "Robbie Coltrane", "value": 8}, {"from": "Daniel Radcliffe", "to": "Emma Watson", "value": 8}, {"from": "Adam Sandler", "to": "Kevin Nealon", "value": 8}, {"from": "Alan Rickman", "to": "Daniel Radcliffe", "value": 8}, {"from": "Alan Rickman", "to": "David Bradley", "value": 8}, {"from": "Bonnie Wright", "to": "Tom Felton", "value": 8}, {"from": "Alan Rickman", "to": "Emma Watson", "value": 8}, {"from": "Bonnie Wright", "to": "Warwick Davis", "value": 8}, {"from": "Geraldine Somerville", "to": "Rupert Grint", "value": 8}, {"from": "Alan Rickman", "to": "Geraldine Somerville", "value": 8}, {"from": "Bonnie Wright", "to": "Emma Watson", "value": 8}, {"from": "Bonnie Wright", "to": "Daniel Radcliffe", "value": 8}, {"from": "Daniel Radcliffe", "to": "Tom Felton", "value": 8}, {"from": "Bonnie Wright", "to": "Rupert Grint", "value": 8}, {"from": "Daniel Radcliffe", "to": "Warwick Davis", "value": 8}, {"from": "Alan Rickman", "to": "Matthew David Lewis", "value": 8}, {"from": "Alan Rickman", "to": "Maggie Smith", "value": 8}, {"from": "Bonnie Wright", "to": "Geraldine Somerville", "value": 8}, {"from": "Alan Rickman", "to": "Rupert Grint", "value": 8}, {"from": "Alan Rickman", "to": "Robbie Coltrane", "value": 8}, {"from": "Matthew David Lewis", "to": "Robbie Coltrane", "value": 8}, {"from": "Matthew David Lewis", "to": "Rupert Grint", "value": 8}, {"from": "Daniel Radcliffe", "to": "Geraldine Somerville", "value": 8}, {"from": "Bonnie Wright", "to": "Maggie Smith", "value": 8}, {"from": "Matthew David Lewis", "to": "Warwick Davis", "value": 8}, {"from": "Maggie Smith", "to": "Robbie Coltrane", "value": 8}, {"from": "Maggie Smith", "to": "Rupert Grint", "value": 8}, {"from": "Bonnie Wright", "to": "Matthew David Lewis", "value": 8}, {"from": "Geraldine Somerville", "to": "Warwick Davis", "value": 8}, {"from": "Joan Cusack", "to": "John Cusack", "value": 8}, {"from": "Geraldine Somerville", "to": "Tom Felton", "value": 8}, {"from": "Matthew David Lewis", "to": "Tom Felton", "value": 8}, {"from": "Daniel Radcliffe", "to": "Robbie Coltrane", "value": 8}, {"from": "Alan Rickman", "to": "Tom Felton", "value": 8}, {"from": "Daniel Radcliffe", "to": "Devon Murray", "value": 7}, {"from": "Julie Walters", "to": "Robbie Coltrane", "value": 7}, {"from": "Alan Rickman", "to": "Devon Murray", "value": 7}, {"from": "Alfred Enoch", "to": "Tom Felton", "value": 7}, {"from": "Joshua Herdman", "to": "Matthew David Lewis", "value": 7}, {"from": "Alfred Enoch", "to": "Maggie Smith", "value": 7}, {"from": "Eugene Levy", "to": "Jennifer Coolidge", "value": 7}, {"from": "Alan Rickman", "to": "Joshua Herdman", "value": 7}, {"from": "Bonnie Wright", "to": "Mark Williams", "value": 7}, {"from": "David Bradley", "to": "Maggie Smith", "value": 7}, {"from": "Joshua Herdman", "to": "Maggie Smith", "value": 7}, {"from": "Harvey Keitel", "to": "Victor Argo", "value": 7}, {"from": "Dom DeLuise", "to": "Madeline Kahn", "value": 7}, {"from": "David Bradley", "to": "Geraldine Somerville", "value": 7}, {"from": "Devon Murray", "to": "Robbie Coltrane", "value": 7}, {"from": "Alfred Enoch", "to": "Daniel Radcliffe", "value": 7}, {"from": "Geraldine Somerville", "to": "Michael Gambon", "value": 7}, {"from": "David Bradley", "to": "Emma Watson", "value": 7}, {"from": "Alfred Enoch", "to": "Bonnie Wright", "value": 7}, {"from": "Daniel Radcliffe", "to": "Joshua Herdman", "value": 7}, {"from": "Adam Sandler", "to": "Nick Swardson", "value": 7}, {"from": "Geraldine Somerville", "to": "Mark Williams", "value": 7}, {"from": "Christopher Knights", "to": "Conrad Vernon", "value": 7}, {"from": "Maddie Blaustein", "to": "Veronica Taylor", "value": 7}, {"from": "Bud Abbott", "to": "Lou Costello", "value": 7}, {"from": "Alfred Enoch", "to": "Matthew David Lewis", "value": 7}, {"from": "Alan Rickman", "to": "Alfred Enoch", "value": 7}, {"from": "David Graf", "to": "Michael Winslow", "value": 7}, {"from": "Devon Murray", "to": "Rupert Grint", "value": 7}, {"from": "Alfred Enoch", "to": "Robbie Coltrane", "value": 7}, {"from": "Alfred Enoch", "to": "Rupert Grint", "value": 7}, {"from": "Alan Rickman", "to": "Timothy Spall", "value": 7}, {"from": "Geraldine Somerville", "to": "Joshua Herdman", "value": 7}, {"from": "Alfred Enoch", "to": "Emma Watson", "value": 7}, {"from": "Dave Goelz", "to": "Jerry Nelson", "value": 7}, {"from": "Mark Williams", "to": "Rupert Grint", "value": 7}, {"from": "Allen Covert", "to": "Kevin Nealon", "value": 7}, {"from": "Mark Williams", "to": "Warwick Davis", "value": 7}, {"from": "Julie Walters", "to": "Maggie Smith", "value": 7}, {"from": "Emma Watson", "to": "Joshua Herdman", "value": 7}, {"from": "Allen Covert", "to": "Peter Dante", "value": 7}, {"from": "Daniel Radcliffe", "to": "David Bradley", "value": 7}, {"from": "Sylvester Stallone", "to": "Tony Burton", "value": 7}, {"from": "David Bradley", "to": "Rupert Grint", "value": 7}, {"from": "David Graf", "to": "George Gaynes", "value": 7}, {"from": "Jack Lemmon", "to": "Walter Matthau", "value": 7}, {"from": "Cheech Marin", "to": "Danny Trejo", "value": 7}, {"from": "Mark Williams", "to": "Michael Gambon", "value": 7}, {"from": "Devon Murray", "to": "Emma Watson", "value": 7}, {"from": "Bonnie Wright", "to": "Devon Murray", "value": 7}, {"from": "Joshua Herdman", "to": "Rupert Grint", "value": 7}, {"from": "Joshua Herdman", "to": "Tom Felton", "value": 7}, {"from": "Emma Watson", "to": "Mark Williams", "value": 7}, {"from": "Jason Mewes", "to": "Kevin Smith", "value": 7}, {"from": "Ikue Otani", "to": "Rachael Lillis", "value": 7}, {"from": "George Gaynes", "to": "Michael Winslow", "value": 7}, {"from": "Frank Oz", "to": "Jerry Nelson", "value": 7}, {"from": "Devon Murray", "to": "Geraldine Somerville", "value": 7}, {"from": "David Bradley", "to": "Robbie Coltrane", "value": 7}, {"from": "Bonnie Wright", "to": "Joshua Herdman", "value": 7}, {"from": "Maddie Blaustein", "to": "Rachael Lillis", "value": 7}, {"from": "Devon Murray", "to": "Warwick Davis", "value": 7}, {"from": "Joshua Herdman", "to": "Robbie Coltrane", "value": 7}, {"from": "Robert Woolsey", "to": "Wheeler \u0026 Woolsey", "value": 7}, {"from": "David Bradley", "to": "Tom Felton", "value": 7}, {"from": "David Bradley", "to": "Matthew David Lewis", "value": 7}, {"from": "Bonnie Wright", "to": "David Bradley", "value": 7}, {"from": "Ben Affleck", "to": "Matt Damon", "value": 7}, {"from": "Devon Murray", "to": "Matthew David Lewis", "value": 7}, {"from": "David Bradley", "to": "Warwick Davis", "value": 7}, {"from": "Mark Williams", "to": "Robbie Coltrane", "value": 7}, {"from": "Alfred Enoch", "to": "Warwick Davis", "value": 7}, {"from": "Devon Murray", "to": "Maggie Smith", "value": 7}, {"from": "Eddie Kaye Thomas", "to": "John Cho", "value": 7}, {"from": "Alfred Enoch", "to": "David Bradley", "value": 7}, {"from": "Maggie Smith", "to": "Mark Williams", "value": 7}, {"from": "Mark Williams", "to": "Matthew David Lewis", "value": 7}, {"from": "Daniel Radcliffe", "to": "Mark Williams", "value": 7}, {"from": "Devon Murray", "to": "Tom Felton", "value": 7}, {"from": "Devon Murray", "to": "Joshua Herdman", "value": 7}, {"from": "Alan Rickman", "to": "Mark Williams", "value": 7}, {"from": "Alfred Enoch", "to": "Geraldine Somerville", "value": 7}, {"from": "Maggie Smith", "to": "Michael Gambon", "value": 7}, {"from": "Joshua Herdman", "to": "Warwick Davis", "value": 7}, {"from": "Alfred Enoch", "to": "Joshua Herdman", "value": 6}, {"from": "Jamie Waylett", "to": "Robbie Coltrane", "value": 6}, {"from": "Daniel Radcliffe", "to": "Julie Walters", "value": 6}, {"from": "Alfred Enoch", "to": "Mark Williams", "value": 6}, {"from": "Bonnie Wright", "to": "Oliver Phelps", "value": 6}, {"from": "Alfred Enoch", "to": "Oliver Phelps", "value": 6}, {"from": "Leslie Easterbrook", "to": "Michael Winslow", "value": 6}, {"from": "David Bradley", "to": "James Phelps", "value": 6}, {"from": "Allen Covert", "to": "Rob Schneider", "value": 6}, {"from": "Ikue Otani", "to": "Shinichiro Miki", "value": 6}, {"from": "David Bradley", "to": "Jamie Waylett", "value": 6}, {"from": "Amy Birnbaum", "to": "Eric Stuart", "value": 6}, {"from": "Jamie Waylett", "to": "Joshua Herdman", "value": 6}, {"from": "Jeremy Piven", "to": "John Cusack", "value": 6}, {"from": "Julie Walters", "to": "Matthew David Lewis", "value": 6}, {"from": "Bonnie Wright", "to": "Michael Gambon", "value": 6}, {"from": "Jamie Waylett", "to": "Maggie Smith", "value": 6}, {"from": "Sylvester Stallone", "to": "Talia Shire", "value": 6}, {"from": "Rachael Lillis", "to": "Ted Lewis", "value": 6}, {"from": "John Wayne", "to": "Ward Bond", "value": 6}, {"from": "Jamie Waylett", "to": "Matthew David Lewis", "value": 6}, {"from": "Jamie Waylett", "to": "Oliver Phelps", "value": 6}, {"from": "Julie Walters", "to": "Rupert Grint", "value": 6}, {"from": "Ikue Otani", "to": "Maddie Blaustein", "value": 6}, {"from": "Nick Swardson", "to": "Rob Schneider", "value": 6}, {"from": "James Phelps", "to": "Joshua Herdman", "value": 6}, {"from": "Jamie Waylett", "to": "Rupert Grint", "value": 6}, {"from": "Kayzie Rogers", "to": "Rachael Lillis", "value": 6}, {"from": "George Takei", "to": "Walter Koenig", "value": 6}, {"from": "George Takei", "to": "William Shatner", "value": 6}, {"from": "Adam Sandler", "to": "Blake Clark", "value": 6}, {"from": "Emma Watson", "to": "Oliver Phelps", "value": 6}, {"from": "Emma Watson", "to": "Michael Gambon", "value": 6}, {"from": "Burt Reynolds", "to": "Dom DeLuise", "value": 6}, {"from": "Kayzie Rogers", "to": "Veronica Taylor", "value": 6}, {"from": "Maggie Smith", "to": "Oliver Phelps", "value": 6}, {"from": "Matthew David Lewis", "to": "Michael Gambon", "value": 6}, {"from": "Alan Rickman", "to": "Julie Walters", "value": 6}, {"from": "Matthew David Lewis", "to": "Oliver Phelps", "value": 6}, {"from": "Ben Affleck", "to": "Jason Lee", "value": 6}, {"from": "Emma Watson", "to": "Julie Walters", "value": 6}, {"from": "Dorothy Lee", "to": "Robert Woolsey", "value": 6}, {"from": "Eric Stuart", "to": "Ted Lewis", "value": 6}, {"from": "Burt Young", "to": "Talia Shire", "value": 6}, {"from": "Emma Watson", "to": "Jamie Waylett", "value": 6}, {"from": "Emma Watson", "to": "James Phelps", "value": 6}, {"from": "Alan Rickman", "to": "Michael Gambon", "value": 6}, {"from": "Alan Rickman", "to": "Oliver Phelps", "value": 6}, {"from": "James Doohan", "to": "Leonard Nimoy", "value": 6}, {"from": "James Doohan", "to": "Nichelle Nichols", "value": 6}, {"from": "Alan Rickman", "to": "Richard Griffiths", "value": 6}, {"from": "Daniel Radcliffe", "to": "Jamie Waylett", "value": 6}, {"from": "James Doohan", "to": "Walter Koenig", "value": 6}, {"from": "James Doohan", "to": "William Shatner", "value": 6}, {"from": "David Thewlis", "to": "Michael Gambon", "value": 6}, {"from": "Leonard Nimoy", "to": "Nichelle Nichols", "value": 6}, {"from": "Daniel Radcliffe", "to": "James Phelps", "value": 6}, {"from": "Ben Stiller", "to": "Jack Black", "value": 6}, {"from": "Burt Young", "to": "Sylvester Stallone", "value": 6}, {"from": "Burt Young", "to": "Tony Burton", "value": 6}, {"from": "Alfred Enoch", "to": "Jamie Waylett", "value": 6}, {"from": "Marlon Wayans", "to": "Shawn Wayans", "value": 6}, {"from": "Geraldine Somerville", "to": "Oliver Phelps", "value": 6}, {"from": "Jamie Waylett", "to": "Tom Felton", "value": 6}, {"from": "Jamie Waylett", "to": "Warwick Davis", "value": 6}, {"from": "Alfred Enoch", "to": "Devon Murray", "value": 6}, {"from": "Bubba Smith", "to": "Michael Winslow", "value": 6}, {"from": "Adam Sandler", "to": "Peter Dante", "value": 6}, {"from": "Adam Sandler", "to": "Norm Macdonald", "value": 6}, {"from": "Anthony Daniels", "to": "Kenny Baker", "value": 6}, {"from": "David Bradley", "to": "Devon Murray", "value": 6}, {"from": "Bruce Campbell", "to": "Ted Raimi", "value": 6}, {"from": "Geraldine Somerville", "to": "Julie Walters", "value": 6}, {"from": "Walter Koenig", "to": "William Shatner", "value": 6}, {"from": "Adam Sandler", "to": "Kevin James", "value": 6}, {"from": "Jennifer Coolidge", "to": "John Cho", "value": 6}, {"from": "Geraldine Somerville", "to": "Jamie Waylett", "value": 6}, {"from": "Ben Affleck", "to": "Kevin Smith", "value": 6}, {"from": "Joshua Herdman", "to": "Mark Williams", "value": 6}, {"from": "Geraldine Somerville", "to": "James Phelps", "value": 6}, {"from": "Bubba Smith", "to": "George Gaynes", "value": 6}, {"from": "George Takei", "to": "James Doohan", "value": 6}, {"from": "Joshua Herdman", "to": "Oliver Phelps", "value": 6}, {"from": "Nichelle Nichols", "to": "Walter Koenig", "value": 6}, {"from": "Nichelle Nichols", "to": "William Shatner", "value": 6}, {"from": "Alan Rickman", "to": "Helena Bonham Carter", "value": 6}, {"from": "George Takei", "to": "Leonard Nimoy", "value": 6}, {"from": "Bubba Smith", "to": "David Graf", "value": 6}, {"from": "Antonio Banderas", "to": "Salma Hayek", "value": 6}, {"from": "George Takei", "to": "Nichelle Nichols", "value": 6}, {"from": "Alan Rickman", "to": "James Phelps", "value": 6}, {"from": "Alan Rickman", "to": "Jamie Waylett", "value": 6}, {"from": "Eric Stuart", "to": "Kayzie Rogers", "value": 6}, {"from": "Alfred Enoch", "to": "James Phelps", "value": 6}, {"from": "Bonnie Wright", "to": "Jamie Waylett", "value": 6}, {"from": "James Phelps", "to": "Warwick Davis", "value": 6}, {"from": "Brian O\u0027Halloran", "to": "Jason Mewes", "value": 6}, {"from": "Leonard Nimoy", "to": "Walter Koenig", "value": 6}, {"from": "Oliver Phelps", "to": "Robbie Coltrane", "value": 6}, {"from": "Julie Walters", "to": "Warwick Davis", "value": 6}, {"from": "DeForest Kelley", "to": "Walter Koenig", "value": 6}, {"from": "Dom DeLuise", "to": "Mel Brooks", "value": 6}, {"from": "Devon Murray", "to": "Mark Williams", "value": 6}, {"from": "David Graf", "to": "Leslie Easterbrook", "value": 6}, {"from": "DeForest Kelley", "to": "William Shatner", "value": 6}, {"from": "Eric Stuart", "to": "Tara Sands", "value": 6}, {"from": "Julie Walters", "to": "Tom Felton", "value": 6}, {"from": "James Phelps", "to": "Matthew David Lewis", "value": 6}, {"from": "Leonard Nimoy", "to": "William Shatner", "value": 6}, {"from": "DeForest Kelley", "to": "George Takei", "value": 6}, {"from": "David Bradley", "to": "Oliver Phelps", "value": 6}, {"from": "James Phelps", "to": "Maggie Smith", "value": 6}, {"from": "James Phelps", "to": "Tom Felton", "value": 6}, {"from": "Michael Gambon", "to": "Rupert Grint", "value": 6}, {"from": "Brian O\u0027Halloran", "to": "Kevin Smith", "value": 6}, {"from": "Daniel Radcliffe", "to": "Oliver Phelps", "value": 6}, {"from": "Ted Lewis", "to": "Veronica Taylor", "value": 6}, {"from": "Jason Isaacs", "to": "Ralph Fiennes", "value": 6}, {"from": "DeForest Kelley", "to": "Nichelle Nichols", "value": 6}, {"from": "Richard Griffiths", "to": "Warwick Davis", "value": 6}, {"from": "Casey Affleck", "to": "Matt Damon", "value": 6}, {"from": "Dave Goelz", "to": "Steve Whitmire", "value": 6}, {"from": "Bonnie Wright", "to": "Julie Walters", "value": 6}, {"from": "Helena Bonham Carter", "to": "Timothy Spall", "value": 6}, {"from": "Bonnie Wright", "to": "James Phelps", "value": 6}, {"from": "DeForest Kelley", "to": "Leonard Nimoy", "value": 6}, {"from": "Frank Oz", "to": "Steve Whitmire", "value": 6}, {"from": "George Gaynes", "to": "Leslie Easterbrook", "value": 6}, {"from": "DeForest Kelley", "to": "James Doohan", "value": 6}, {"from": "Michael Gambon", "to": "Warwick Davis", "value": 6}, {"from": "Devon Murray", "to": "Jamie Waylett", "value": 6}, {"from": "Oliver Phelps", "to": "Tom Felton", "value": 6}, {"from": "James Phelps", "to": "Rupert Grint", "value": 6}, {"from": "David Bradley", "to": "Joshua Herdman", "value": 6}, {"from": "James Phelps", "to": "Robbie Coltrane", "value": 6}, {"from": "Jon Favreau", "to": "Vince Vaughn", "value": 6}, {"from": "Martin Scorsese", "to": "Robert De Niro", "value": 6}, {"from": "Talia Shire", "to": "Tony Burton", "value": 6}, {"from": "Michael Gambon", "to": "Robbie Coltrane", "value": 6}, {"from": "Oliver Phelps", "to": "Rupert Grint", "value": 6}, {"from": "Daniel Radcliffe", "to": "Michael Gambon", "value": 6}, {"from": "Ikue Otani", "to": "Kayzie Rogers", "value": 6}, {"from": "Michael Gambon", "to": "Tom Felton", "value": 6}, {"from": "Devon Murray", "to": "Oliver Phelps", "value": 6}, {"from": "Devon Murray", "to": "James Phelps", "value": 6}, {"from": "Oliver Phelps", "to": "Warwick Davis", "value": 6}, {"from": "John Cusack", "to": "Tim Robbins", "value": 6}, {"from": "David Bradley", "to": "Mark Williams", "value": 6}, {"from": "Harry Morgan", "to": "James Stewart", "value": 6}, {"from": "James Phelps", "to": "Jamie Waylett", "value": 6}, {"from": "James Phelps", "to": "Oliver Phelps", "value": 6}, {"from": "Maggie Smith", "to": "Ralph Fiennes", "value": 5}, {"from": "Allen Covert", "to": "Jonathan Loughran", "value": 5}, {"from": "Bubba Smith", "to": "Marion Ramsey", "value": 5}, {"from": "Emma Watson", "to": "Harry Melling", "value": 5}, {"from": "Fiona Shaw", "to": "Joshua Herdman", "value": 5}, {"from": "Bonnie Wright", "to": "Chris Rankin", "value": 5}, {"from": "Devon Murray", "to": "Julie Walters", "value": 5}, {"from": "Katie Leung", "to": "Rupert Grint", "value": 5}, {"from": "Shinichiro Miki", "to": "Veronica Taylor", "value": 5}, {"from": "Harry Melling", "to": "Maggie Smith", "value": 5}, {"from": "Diane Keaton", "to": "Woody Allen", "value": 5}, {"from": "Rupert Grint", "to": "Timothy Spall", "value": 5}, {"from": "Richard Griffiths", "to": "Rupert Grint", "value": 5}, {"from": "Megumi Hayashibara", "to": "Rica Matsumoto", "value": 5}, {"from": "David Koechner", "to": "Will Ferrell", "value": 5}, {"from": "Christopher Lee", "to": "Johnny Depp", "value": 5}, {"from": "Adrian Rawlins", "to": "Emma Watson", "value": 5}, {"from": "Chris Rankin", "to": "Rupert Grint", "value": 5}, {"from": "Emma Watson", "to": "Jason Isaacs", "value": 5}, {"from": "Adrian Rawlins", "to": "Geraldine Somerville", "value": 5}, {"from": "Geraldine Somerville", "to": "Katie Leung", "value": 5}, {"from": "Cody Cameron", "to": "Conrad Vernon", "value": 5}, {"from": "David Bradley", "to": "Julie Walters", "value": 5}, {"from": "Amy Birnbaum", "to": "Tara Sands", "value": 5}, {"from": "Kayzie Rogers", "to": "Maddie Blaustein", "value": 5}, {"from": "Jerry Nelson", "to": "Steve Whitmire", "value": 5}, {"from": "Daniel Radcliffe", "to": "Harry Melling", "value": 5}, {"from": "Blake Clark", "to": "Rob Schneider", "value": 5}, {"from": "Brad Pitt", "to": "George Clooney", "value": 5}, {"from": "Jason Biggs", "to": "Seann William Scott", "value": 5}, {"from": "Brad Pitt", "to": "Julia Roberts", "value": 5}, {"from": "Adam Sandler", "to": "David Spade", "value": 5}, {"from": "Jason Isaacs", "to": "Rupert Grint", "value": 5}, {"from": "Jason Lee", "to": "Kevin Smith", "value": 5}, {"from": "Katie Leung", "to": "Warwick Davis", "value": 5}, {"from": "Adrian Rawlins", "to": "Warwick Davis", "value": 5}, {"from": "Adrian Rawlins", "to": "Robbie Coltrane", "value": 5}, {"from": "Betsy Russell", "to": "Costas Mandylor", "value": 5}, {"from": "Marion Ramsey", "to": "Michael Winslow", "value": 5}, {"from": "Gary Oldman", "to": "Michael Gambon", "value": 5}, {"from": "Dick Miller", "to": "Robert Picardo", "value": 5}, {"from": "Amy Birnbaum", "to": "Veronica Taylor", "value": 5}, {"from": "Jason Isaacs", "to": "Matthew David Lewis", "value": 5}, {"from": "Costas Mandylor", "to": "Tobin Bell", "value": 5}, {"from": "Alfred Enoch", "to": "Chris Rankin", "value": 5}, {"from": "Devon Murray", "to": "Michael Gambon", "value": 5}, {"from": "Bonnie Wright", "to": "Jason Isaacs", "value": 5}, {"from": "Helena Bonham Carter", "to": "Johnny Depp", "value": 5}, {"from": "Bill Hader", "to": "Seth Rogen", "value": 5}, {"from": "John Cho", "to": "Seann William Scott", "value": 5}, {"from": "Kayzie Rogers", "to": "Tara Sands", "value": 5}, {"from": "Amy Stiller", "to": "Ben Stiller", "value": 5}, {"from": "Devon Murray", "to": "Harry Melling", "value": 5}, {"from": "Alan Rickman", "to": "Fiona Shaw", "value": 5}, {"from": "Timothy Spall", "to": "Warwick Davis", "value": 5}, {"from": "Alan Rickman", "to": "Katie Leung", "value": 5}, {"from": "Richard Griffiths", "to": "Robbie Coltrane", "value": 5}, {"from": "Cheech Marin", "to": "Salma Hayek", "value": 5}, {"from": "Harry Melling", "to": "Rupert Grint", "value": 5}, {"from": "David Bradley", "to": "Michael Gambon", "value": 5}, {"from": "Cheech Marin", "to": "Tony Shalhoub", "value": 5}, {"from": "Alan Rickman", "to": "Emma Thompson", "value": 5}, {"from": "Daniel Radcliffe", "to": "Fiona Shaw", "value": 5}, {"from": "Geraldine Somerville", "to": "Jason Isaacs", "value": 5}, {"from": "Bonnie Wright", "to": "Fiona Shaw", "value": 5}, {"from": "David Thewlis", "to": "Geraldine Somerville", "value": 5}, {"from": "Richard Jenkins", "to": "Stanley Tucci", "value": 5}, {"from": "Adrian Rawlins", "to": "David Bradley", "value": 5}, {"from": "Ben Affleck", "to": "Jason Mewes", "value": 5}, {"from": "Chris Rankin", "to": "Matthew David Lewis", "value": 5}, {"from": "Jason Isaacs", "to": "Mark Williams", "value": 5}, {"from": "Michael Gambon", "to": "Timothy Spall", "value": 5}, {"from": "Joshua Herdman", "to": "Michael Gambon", "value": 5}, {"from": "Emma Watson", "to": "Katie Leung", "value": 5}, {"from": "Frank Welker", "to": "Rob Paulsen", "value": 5}, {"from": "Chris Rankin", "to": "Tom Felton", "value": 5}, {"from": "Timothy Spall", "to": "Tom Felton", "value": 5}, {"from": "David Thewlis", "to": "Tom Felton", "value": 5}, {"from": "Rica Matsumoto", "to": "Shinichiro Miki", "value": 5}, {"from": "Alan Rickman", "to": "Harry Melling", "value": 5}, {"from": "Adrian Rawlins", "to": "Daniel Radcliffe", "value": 5}, {"from": "Matthew David Lewis", "to": "Richard Griffiths", "value": 5}, {"from": "Joshua Herdman", "to": "Julie Walters", "value": 5}, {"from": "Adrian Rawlins", "to": "Alan Rickman", "value": 5}, {"from": "Christopher Knights", "to": "Cody Cameron", "value": 5}, {"from": "Bubba Smith", "to": "Leslie Easterbrook", "value": 5}, {"from": "Harry Melling", "to": "Robbie Coltrane", "value": 5}, {"from": "Jason Isaacs", "to": "Warwick Davis", "value": 5}, {"from": "Alan Rickman", "to": "Chris Rankin", "value": 5}, {"from": "Chris Rankin", "to": "Daniel Radcliffe", "value": 5}, {"from": "David Thewlis", "to": "Emma Watson", "value": 5}, {"from": "Adrian Rawlins", "to": "Alfred Enoch", "value": 5}, {"from": "Carla Gallo", "to": "Jonah Hill", "value": 5}, {"from": "G. W. Bailey", "to": "Michael Winslow", "value": 5}, {"from": "Chris Miller", "to": "Christopher Knights", "value": 5}, {"from": "Geraldine Somerville", "to": "Harry Melling", "value": 5}, {"from": "Shinichiro Miki", "to": "Y\u00fbji Ueda", "value": 5}, {"from": "Joshua Herdman", "to": "Richard Griffiths", "value": 5}, {"from": "Chris Miller", "to": "Conrad Vernon", "value": 5}, {"from": "Jason Isaacs", "to": "Maggie Smith", "value": 5}, {"from": "Jeanette MacDonald", "to": "Nelson Eddy", "value": 5}, {"from": "David Graf", "to": "Marion Ramsey", "value": 5}, {"from": "Fiona Shaw", "to": "Geraldine Somerville", "value": 5}, {"from": "Adrian Rawlins", "to": "Rupert Grint", "value": 5}, {"from": "Emma Watson", "to": "Timothy Spall", "value": 5}, {"from": "Eugene Levy", "to": "Seann William Scott", "value": 5}, {"from": "Catherine O\u0027Hara", "to": "Fred Willard", "value": 5}, {"from": "David Thewlis", "to": "Warwick Davis", "value": 5}, {"from": "Fiona Shaw", "to": "Harry Melling", "value": 5}, {"from": "Doris Day", "to": "Gordon MacRae", "value": 5}, {"from": "Bonnie Wright", "to": "Timothy Spall", "value": 5}, {"from": "Kayzie Rogers", "to": "Ted Lewis", "value": 5}, {"from": "Alan Rickman", "to": "David Thewlis", "value": 5}, {"from": "Ginger Rogers", "to": "Lucille Ball", "value": 5}, {"from": "Harry Melling", "to": "Joshua Herdman", "value": 5}, {"from": "Adrian Rawlins", "to": "Bonnie Wright", "value": 5}, {"from": "Jeff Bennett", "to": "Rob Paulsen", "value": 5}, {"from": "Joe Pesci", "to": "Robert De Niro", "value": 5}, {"from": "Emma Watson", "to": "Richard Griffiths", "value": 5}, {"from": "Robbie Coltrane", "to": "Timothy Spall", "value": 5}, {"from": "Ikue Otani", "to": "Ted Lewis", "value": 5}, {"from": "Katie Leung", "to": "Maggie Smith", "value": 5}, {"from": "Julia Roberts", "to": "Matt Damon", "value": 5}, {"from": "Helena Bonham Carter", "to": "Michael Gambon", "value": 5}, {"from": "Katie Leung", "to": "Tom Felton", "value": 5}, {"from": "Chris Rankin", "to": "Emma Watson", "value": 5}, {"from": "Ikue Otani", "to": "Y\u00fbji Ueda", "value": 5}, {"from": "Betsy Russell", "to": "Tobin Bell", "value": 5}, {"from": "George Gaynes", "to": "Marion Ramsey", "value": 5}, {"from": "Jack Black", "to": "Tim Robbins", "value": 5}, {"from": "Jason Isaacs", "to": "Robbie Coltrane", "value": 5}, {"from": "Frank Welker", "to": "Peter Cullen", "value": 5}, {"from": "Ben Affleck", "to": "Brian O\u0027Halloran", "value": 5}, {"from": "Bonnie Wright", "to": "Richard Griffiths", "value": 5}, {"from": "Maddie Blaustein", "to": "Ted Lewis", "value": 5}, {"from": "Allen Covert", "to": "Nick Swardson", "value": 5}, {"from": "Harry Melling", "to": "Tom Felton", "value": 5}, {"from": "David Graf", "to": "G. W. Bailey", "value": 5}, {"from": "Koichi Yamadera", "to": "Shinichiro Miki", "value": 5}, {"from": "Adrian Rawlins", "to": "Maggie Smith", "value": 5}, {"from": "Julie Walters", "to": "Mark Williams", "value": 5}, {"from": "Mike Myers", "to": "Rob Lowe", "value": 5}, {"from": "Burt Reynolds", "to": "Ned Beatty", "value": 5}, {"from": "James Phelps", "to": "Mark Williams", "value": 5}, {"from": "David Thewlis", "to": "Matthew David Lewis", "value": 5}, {"from": "Alan Rickman", "to": "Ralph Fiennes", "value": 5}, {"from": "Bonnie Wright", "to": "David Thewlis", "value": 5}, {"from": "Daniel Radcliffe", "to": "Richard Griffiths", "value": 5}, {"from": "Danny Trejo", "to": "Daryl Sabara", "value": 5}, {"from": "Rachael Lillis", "to": "Tara Sands", "value": 5}, {"from": "Alan Rickman", "to": "Jason Isaacs", "value": 5}, {"from": "John Goodman", "to": "Steve Buscemi", "value": 5}, {"from": "Adrian Rawlins", "to": "Tom Felton", "value": 5}, {"from": "Fiona Shaw", "to": "Tom Felton", "value": 5}, {"from": "Frank Oz", "to": "Kenny Baker", "value": 5}, {"from": "Abraham Aronofsky", "to": "Mark Margolis", "value": 5}, {"from": "Bruce Cabot", "to": "John Wayne", "value": 5}, {"from": "Ikue Otani", "to": "Megumi Hayashibara", "value": 5}, {"from": "Alfred Hitchcock", "to": "Leo G. Carroll", "value": 5}, {"from": "Mink Stole", "to": "Patty Hearst", "value": 5}, {"from": "Tara Sands", "to": "Veronica Taylor", "value": 5}, {"from": "Harrison Ford", "to": "James Earl Jones", "value": 5}, {"from": "Chris Rankin", "to": "Geraldine Somerville", "value": 5}, {"from": "Fiona Shaw", "to": "Maggie Smith", "value": 5}, {"from": "Rachael Lillis", "to": "Shinichiro Miki", "value": 5}, {"from": "Bill Hader", "to": "Kristen Wiig", "value": 5}, {"from": "George Clooney", "to": "Matt Damon", "value": 5}, {"from": "Katie Leung", "to": "Mark Williams", "value": 5}, {"from": "Jason Lee", "to": "Jason Mewes", "value": 5}, {"from": "Courteney Cox", "to": "David Arquette", "value": 5}, {"from": "G. W. Bailey", "to": "George Gaynes", "value": 5}, {"from": "Marjorie Main", "to": "Percy Kilbride", "value": 5}, {"from": "Hume Cronyn", "to": "Jessica Tandy", "value": 5}, {"from": "Ikue Otani", "to": "Rica Matsumoto", "value": 5}, {"from": "Geraldine Somerville", "to": "Timothy Spall", "value": 5}, {"from": "Fred Willard", "to": "Jennifer Coolidge", "value": 5}, {"from": "Harry Melling", "to": "Warwick Davis", "value": 5}, {"from": "David Thewlis", "to": "Robbie Coltrane", "value": 5}, {"from": "Megumi Hayashibara", "to": "Shinichiro Miki", "value": 5}, {"from": "Mark Williams", "to": "Oliver Phelps", "value": 5}, {"from": "Freddie Prinze, Jr.", "to": "Sarah Michelle Gellar", "value": 5}, {"from": "G. W. Bailey", "to": "Leslie Easterbrook", "value": 5}, {"from": "Katie Leung", "to": "Matthew David Lewis", "value": 5}, {"from": "Fiona Shaw", "to": "Warwick Davis", "value": 5}, {"from": "Harvey Keitel", "to": "Robert De Niro", "value": 5}, {"from": "Bonnie Wright", "to": "Katie Leung", "value": 5}, {"from": "Maddie Blaustein", "to": "Tara Sands", "value": 5}, {"from": "Richard Griffiths", "to": "Tom Felton", "value": 5}, {"from": "Ricky Jay", "to": "William H. Macy", "value": 5}, {"from": "Cloris Leachman", "to": "Madeline Kahn", "value": 5}, {"from": "Fiona Shaw", "to": "Rupert Grint", "value": 5}, {"from": "Antonio Banderas", "to": "Cheech Marin", "value": 5}, {"from": "John Turturro", "to": "Steve Buscemi", "value": 5}, {"from": "Fiona Shaw", "to": "Matthew David Lewis", "value": 5}, {"from": "Chris Rankin", "to": "Robbie Coltrane", "value": 5}, {"from": "Emma Watson", "to": "Fiona Shaw", "value": 5}, {"from": "Chris Rankin", "to": "David Bradley", "value": 5}, {"from": "Daniel Radcliffe", "to": "David Thewlis", "value": 5}, {"from": "Alfred Enoch", "to": "Julie Walters", "value": 5}, {"from": "Matthew David Lewis", "to": "Timothy Spall", "value": 5}, {"from": "Harry Melling", "to": "Richard Griffiths", "value": 5}, {"from": "James Gandolfini", "to": "John Travolta", "value": 5}, {"from": "Bonnie Hunt", "to": "John Ratzenberger", "value": 5}, {"from": "Jason Isaacs", "to": "Tom Felton", "value": 5}, {"from": "Eugene Levy", "to": "John Cho", "value": 5}, {"from": "Eugene Levy", "to": "John Candy", "value": 5}, {"from": "Amy Birnbaum", "to": "Rachael Lillis", "value": 5}, {"from": "Peter Dante", "to": "Rob Schneider", "value": 5}, {"from": "Mark Williams", "to": "Timothy Spall", "value": 5}, {"from": "Antonio Banderas", "to": "Danny Trejo", "value": 5}, {"from": "Fiona Shaw", "to": "Robbie Coltrane", "value": 5}, {"from": "Harry Carey, Jr.", "to": "John Wayne", "value": 5}, {"from": "Harry Melling", "to": "Matthew David Lewis", "value": 5}, {"from": "Fiona Shaw", "to": "Richard Griffiths", "value": 5}, {"from": "Chris Rankin", "to": "Warwick Davis", "value": 5}, {"from": "Ikue Otani", "to": "Koichi Yamadera", "value": 5}, {"from": "Alfred Enoch", "to": "Michael Gambon", "value": 5}, {"from": "Eric Stuart", "to": "Shinichiro Miki", "value": 5}, {"from": "Julia Roberts", "to": "Lisa Roberts Gillan", "value": 5}, {"from": "Adrian Rawlins", "to": "Matthew David Lewis", "value": 5}, {"from": "David Thewlis", "to": "Rupert Grint", "value": 5}, {"from": "Jim Cummings", "to": "Kath Soucie", "value": 5}, {"from": "Jonah Hill", "to": "Seth Rogen", "value": 5}, {"from": "James Stewart", "to": "Jay C. Flippen", "value": 5}, {"from": "Maggie Smith", "to": "Timothy Spall", "value": 5}, {"from": "Daniel Radcliffe", "to": "Timothy Spall", "value": 5}, {"from": "Jamie Waylett", "to": "Mark Williams", "value": 5}, {"from": "Devon Murray", "to": "Richard Griffiths", "value": 5}, {"from": "Maggie Smith", "to": "Richard Griffiths", "value": 5}, {"from": "Katie Leung", "to": "Robbie Coltrane", "value": 5}, {"from": "Chris Rankin", "to": "Maggie Smith", "value": 5}, {"from": "David Thewlis", "to": "Mark Williams", "value": 5}, {"from": "Freddie Prinze, Jr.", "to": "Matthew Lillard", "value": 5}, {"from": "Daniel Radcliffe", "to": "Jason Isaacs", "value": 5}, {"from": "Allen Covert", "to": "Steve Buscemi", "value": 5}, {"from": "David Thewlis", "to": "Maggie Smith", "value": 5}, {"from": "Devon Murray", "to": "Fiona Shaw", "value": 5}, {"from": "Alyson Hannigan", "to": "Jennifer Coolidge", "value": 5}, {"from": "Ethan Suplee", "to": "Kevin Smith", "value": 5}, {"from": "Alyson Hannigan", "to": "Jason Biggs", "value": 5}, {"from": "Anthony Daniels", "to": "Frank Oz", "value": 5}, {"from": "Geraldine Somerville", "to": "Richard Griffiths", "value": 5}, {"from": "Brian O\u0027Halloran", "to": "Jason Lee", "value": 5}, {"from": "Amy Birnbaum", "to": "Maddie Blaustein", "value": 5}, {"from": "Bill Moseley", "to": "Tom Towles", "value": 5}, {"from": "Shawnee Smith", "to": "Tobin Bell", "value": 5}, {"from": "Alan Rickman", "to": "Robert Hardy", "value": 5}, {"from": "Katie Leung", "to": "Michael Gambon", "value": 5}, {"from": "Daniel Radcliffe", "to": "Katie Leung", "value": 5}, {"from": "Bonnie Wright", "to": "Harry Melling", "value": 5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"gravitationalConstant": -84, "centralGravity": 0.09, "springLength": 20, "springConstant": 0.035}, "minVelocity": 0.18, "solver": "forceAtlas2Based"}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
