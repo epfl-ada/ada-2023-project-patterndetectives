@@ -12,7 +12,7 @@
 - [Organization within the team](#organization-within-the-team)
 
 # Title
-**Harmony on screen: Unraveling successful collaborations in the movie industry**
+**Harmony on screen: Unraveling successful collaborations in the american movie industry**
 
 # Abstract
 This project aims to delve into the intricate dynamics of successful collaboration in the film industry, extending beyond conventional success metrics to explore the chemistry between actors through frequent co-starring. The approach involves constructing actor collaboration networks, interconnecting actors, scenarists, and directors within a comprehensive web network. Employing a granular methodology, the web network is subdivided based on movie genres, allowing for the analysis of collaborative subgraphs. The focus is on identifying patterns and relationships that contribute to the success of movies within each genre. This research not only provides insights into individual performances but also offers an understanding of collaborative networks. By incorporating diverse talents and considering genre-specific nuances, the project aims to yield valuable insights for future filmmaking collaborations, potentially influencing industry practices and enhancing the likelihood of successful movie projects. The use of network analysis tools adds a visual dimension, aiding in the interpretation of the complex web of collaborations in the film industry.
@@ -41,15 +41,12 @@ This project aims to delve into the intricate dynamics of successful collaborati
 Addressing these research questions will likely provide a comprehensive understanding of the collaborative dynamics in the film industry and offer practical insights for future filmmaking endeavors.
 
 # Proposed dataset
-demander aux gens
+IMDb
 
 # Methods
-demander aux gens
+We will use propensity score matching.
 
 # Proposed timeline
-
-
-# Organization within the team
 **Before milestone 2: Define metrics and parameters**
 - Refine and finalize the success metrics for movies.
 - Determine parameters for measuring chemistry and collaboration success.
@@ -77,7 +74,10 @@ demander aux gens
 
 **Week 4 : Finalize analysis and the datastory**
 - Synthesize findings from genre-specific analyses.
-- Draw overarching conclusions and insights.
+- Draw conclusions and insights.
 - Review the prepared datastory and make changes if necessary.
 
 Week 1 and 4 will be done by all team members. Task 1, 2 and 3 will be done by different group members (2 people for Task 1, 2 people for Task 2, and 1 for Task 3), and should be finished by the end of week 3.
+
+# Organization within the team
+Adrien and Julien will do Task 1, Elias and Kaan will do Task 2 and Keren will do Task 3. Everything else will be done as a team.
