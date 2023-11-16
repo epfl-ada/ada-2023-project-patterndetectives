@@ -3,3 +3,6 @@ data/
 
 *.tsv
 *.txt
+.DS_Store
+.idea/.name
+.DS_Store
