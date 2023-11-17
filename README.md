@@ -76,4 +76,9 @@ We will use propensity score matching.
 Week 1 and 4 will be done by all team members. Task 1, 2 and 3 will be done by different group members (2 people for Task 1, 2 people for Task 2, and 1 for Task 3), and should be finished by the end of week 3.
 
 # Organization within the team
-Adrien and Julien will do Task 1, Elias and Kaan will do Task 2 and Keren will do Task 3. Everything else will be done as a team.
+| Task   | Responsible |
+| :--- | :--- |
+| Task 1 | Adrien and Julien |
+| Task 2 | Elias and Kaan |
+| Task 3 | Keren |
+| Everythin else | Whole team |
