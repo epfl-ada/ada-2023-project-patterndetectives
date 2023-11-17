@@ -1,4 +1,4 @@
-# PatternDetectives project
+# Harmony on screen: Unraveling successful collaborations in the american movie industry
 
 **Team members**: [Adrien Vauthey](https://github.com/Lugiasc), [Kaan Uçar](https://github.com/Kaan-wq), [Elias Naha](https://github.com/Eliasepfl), [Keren Bensoussan](https://github.com/sdjfkjsh), [Julien Ars](https://github.com/merlebleue)
 
@@ -9,8 +9,6 @@
 - [Methods](#methods)
 - [Proposed timeline](#proposed-timeline)
 - [Organization within the team](#organization-within-the-team)
-
-# Harmony on screen: Unraveling successful collaborations in the american movie industry
 
 # Abstract
 This project aims to delve into the intricate dynamics of successful collaboration in the film industry, extending beyond conventional success metrics to explore the chemistry between actors through frequent co-starring. The approach involves constructing actor collaboration networks, interconnecting actors, scenarists, and directors within a comprehensive web network. Employing a granular methodology, the web network is subdivided based on movie genres, allowing for the analysis of collaborative subgraphs. The focus is on identifying patterns and relationships that contribute to the success of movies within each genre. This research not only provides insights into individual performances but also offers an understanding of collaborative networks. By incorporating diverse talents and considering genre-specific nuances, the project aims to yield valuable insights for future filmmaking collaborations, potentially influencing industry practices and enhancing the likelihood of successful movie projects. The use of network analysis tools adds a visual dimension, aiding in the interpretation of the complex web of collaborations in the film industry.
