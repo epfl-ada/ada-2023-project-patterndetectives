@@ -2,7 +2,9 @@
 
 **Team members**: [Adrien Vauthey](https://github.com/Lugiasc), [Kaan Uçar](https://github.com/Kaan-wq), [Elias Naha](https://github.com/Eliasepfl), [Keren Bensoussan](https://github.com/sdjfkjsh), [Julien Ars](https://github.com/merlebleue)
 
-Data zip folder to drop in the project : https://drive.google.com/file/d/1H5PKd_VSk6jRUzvEh8h3AlxLpLpTcbMr/view?usp=drive_link
+**Data zip folder to drop in the project :** https://drive.google.com/file/d/1_h82kqZAwvFkpGP9Sx6fA4y4P8t4Zul6/view?usp=sharing
+
+**The main notebook is `main.ipynb`**
 
 # Table of contents
 - [Abstract](#abstract)
@@ -39,10 +41,41 @@ This project aims to delve into the intricate dynamics of successful collaborati
 Addressing these research questions will likely provide a comprehensive understanding of the collaborative dynamics in the film industry and offer practical insights for future filmmaking endeavors.
 
 # Proposed dataset
-* [IMDb dataset](https://developer.imdb.com/non-commercial-datasets/): Used several datasets from IMDb to create a single dataset that is used to populate our own datasets with more information.
+[IMDb dataset](https://developer.imdb.com/non-commercial-datasets/): Used several datasets from IMDb to create a single dataset that is used to populate our own datasets with more information.
+* [IMDb title](https://datasets.imdbws.com/title.basics.tsv.gz): Contains the basic information of movies.
+* [IMDb crew](https://datasets.imdbws.com/title.crew.tsv.gz): Contains the directors and scenarists of movies.
+* [IMDb ratings](https://datasets.imdbws.com/title.ratings.tsv.gz): Contains the ratings of movies.
+* [IMDb name](https://datasets.imdbws.com/name.basics.tsv.gz): Contains the basic information of actors, directors and scenarists.
+* [IMDb principals](https://datasets.imdbws.com/title.principals.tsv.gz): Contains information of people involved in movies.
 
 # Methods
-We will use propensity score matching.
+### 1. Database manager
+Creation of the database and the population of the database with the data from the IMDb dataset.
+
+- Merging database: Merge the IMDb datasets into a single dataset that will be used to populate the database.
+- Cleaning data: Clean the data from the IMDb dataset to remove duplicates and to remove data that is not relevant to the project.
+
+### 2. Analysis
+Analysis of the data to answer the research questions using the CMU movie corpus.
+
+- Processing data: Process the data from the corpus.
+    - Character data: Analysis of the character dataset
+    - Movie data: Analysis of the movie dataset
+    - Revenue analysis around month of release: Categorize each movie into separate bins based on two criterias. Firstly, the first two genres they appear to belong to, and secondly, the month in which they were released. 
+
+- Merging all databases: Merge databases to start performing some analysis on success of a collaboration between actors.
+
+### 3. Transformation around data.
+- Inflation process: Adjust the revenue of each movie to the inflation of the year it was released in.
+- Creation of new features on the merged database: Creation of new features to help understand the evolution of actors individually.
+- Creation of a database of pairs of actors: Creation of a database of pairs of actors that have worked together in a movie.
+
+### 4. Actor network
+**Nodes**: they represent actors, the bigger a node is, the more the actor has made different collaborations. \
+**Edges**: they represent a collaboration between a pair of actors, the size of the edge represents the number of collaborations they have made
+
+### 5. Propensity score matching
+Propensity score matching to predict the revenue of the movie using a linear regression.
 
 # Proposed timeline
 **Before milestone 2: Define metrics and parameters**
