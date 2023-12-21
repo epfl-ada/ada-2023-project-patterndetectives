@@ -1,0 +1,831 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 500px;
+                 background-color: white;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 500px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="Joe Pesci">Joe Pesci</option>
+                                
+                                    <option value="Robert De Niro">Robert De Niro</option>
+                                
+                                    <option value="Christopher Lloyd">Christopher Lloyd</option>
+                                
+                                    <option value="J.J. Cohen">J.J. Cohen</option>
+                                
+                                    <option value="James Tolkan">James Tolkan</option>
+                                
+                                    <option value="Lea Thompson">Lea Thompson</option>
+                                
+                                    <option value="Michael J. Fox">Michael J. Fox</option>
+                                
+                                    <option value="Thomas F. Wilson">Thomas F. Wilson</option>
+                                
+                                    <option value="Bill Paxton">Bill Paxton</option>
+                                
+                                    <option value="Lance Henriksen">Lance Henriksen</option>
+                                
+                                    <option value="Harry Dean Stanton">Harry Dean Stanton</option>
+                                
+                                    <option value="John Lurie">John Lurie</option>
+                                
+                                    <option value="Mia Farrow">Mia Farrow</option>
+                                
+                                    <option value="Woody Allen">Woody Allen</option>
+                                
+                                    <option value="Bill Nunn">Bill Nunn</option>
+                                
+                                    <option value="Giancarlo Esposito">Giancarlo Esposito</option>
+                                
+                                    <option value="Samuel L. Jackson">Samuel L. Jackson</option>
+                                
+                                    <option value="Spike Lee">Spike Lee</option>
+                                
+                                    <option value="Sam Waterston">Sam Waterston</option>
+                                
+                                    <option value="Dianne Wiest">Dianne Wiest</option>
+                                
+                                    <option value="Caitlin O'Heaney">Caitlin O'Heaney</option>
+                                
+                                    <option value="Bill Murray">Bill Murray</option>
+                                
+                                    <option value="Rick Moranis">Rick Moranis</option>
+                                
+                                    <option value="Dan Hicks">Dan Hicks</option>
+                                
+                                    <option value="Ted Raimi">Ted Raimi</option>
+                                
+                                    <option value="Harold Ramis">Harold Ramis</option>
+                                
+                                    <option value="John Turturro">John Turturro</option>
+                                
+                                    <option value="Steve Martin">Steve Martin</option>
+                                
+                                    <option value="DeForest Kelley">DeForest Kelley</option>
+                                
+                                    <option value="George Takei">George Takei</option>
+                                
+                                    <option value="James Doohan">James Doohan</option>
+                                
+                                    <option value="Leonard Nimoy">Leonard Nimoy</option>
+                                
+                                    <option value="Nichelle Nichols">Nichelle Nichols</option>
+                                
+                                    <option value="Walter Koenig">Walter Koenig</option>
+                                
+                                    <option value="William Shatner">William Shatner</option>
+                                
+                                    <option value="Daniel Stern">Daniel Stern</option>
+                                
+                                    <option value="John Heard">John Heard</option>
+                                
+                                    <option value="Andrew Shue">Andrew Shue</option>
+                                
+                                    <option value="Elisabeth Shue">Elisabeth Shue</option>
+                                
+                                    <option value="Jessica Lange">Jessica Lange</option>
+                                
+                                    <option value="Sam Shepard">Sam Shepard</option>
+                                
+                                    <option value="Danny DeVito">Danny DeVito</option>
+                                
+                                    <option value="Kathleen Turner">Kathleen Turner</option>
+                                
+                                    <option value="Michael Douglas">Michael Douglas</option>
+                                
+                                    <option value="Brian Doyle-Murray">Brian Doyle-Murray</option>
+                                
+                                    <option value="Chevy Chase">Chevy Chase</option>
+                                
+                                    <option value="Joan Cusack">Joan Cusack</option>
+                                
+                                    <option value="John Cusack">John Cusack</option>
+                                
+                                    <option value="Arnold Schwarzenegger">Arnold Schwarzenegger</option>
+                                
+                                    <option value="Sven-Ole Thorsen">Sven-Ole Thorsen</option>
+                                
+                                    <option value="Desmond Llewelyn">Desmond Llewelyn</option>
+                                
+                                    <option value="Robert Brown">Robert Brown</option>
+                                
+                                    <option value="John Candy">John Candy</option>
+                                
+                                    <option value="Larry Hankin">Larry Hankin</option>
+                                
+                                    <option value="Corey Feldman">Corey Feldman</option>
+                                
+                                    <option value="Corey Haim">Corey Haim</option>
+                                
+                                    <option value="Raúl Juliá">Raúl Juliá</option>
+                                
+                                    <option value="Sônia Braga">Sônia Braga</option>
+                                
+                                    <option value="Andrew McCarthy">Andrew McCarthy</option>
+                                
+                                    <option value="James Spader">James Spader</option>
+                                
+                                    <option value="Burt Young">Burt Young</option>
+                                
+                                    <option value="Sylvester Stallone">Sylvester Stallone</option>
+                                
+                                    <option value="Talia Shire">Talia Shire</option>
+                                
+                                    <option value="Tony Burton">Tony Burton</option>
+                                
+                                    <option value="Mary Woronov">Mary Woronov</option>
+                                
+                                    <option value="Robert Beltran">Robert Beltran</option>
+                                
+                                    <option value="C. Thomas Howell">C. Thomas Howell</option>
+                                
+                                    <option value="Patrick Swayze">Patrick Swayze</option>
+                                
+                                    <option value="Kiefer Sutherland">Kiefer Sutherland</option>
+                                
+                                    <option value="Lou Diamond Phillips">Lou Diamond Phillips</option>
+                                
+                                    <option value="Hume Cronyn">Hume Cronyn</option>
+                                
+                                    <option value="Jessica Tandy">Jessica Tandy</option>
+                                
+                                    <option value="Ally Sheedy">Ally Sheedy</option>
+                                
+                                    <option value="Judd Nelson">Judd Nelson</option>
+                                
+                                    <option value="Charlie Sheen">Charlie Sheen</option>
+                                
+                                    <option value="Emilio Estevez">Emilio Estevez</option>
+                                
+                                    <option value="G. W. Bailey">G. W. Bailey</option>
+                                
+                                    <option value="Steve Guttenberg">Steve Guttenberg</option>
+                                
+                                    <option value="Charles Bronson">Charles Bronson</option>
+                                
+                                    <option value="Robert F. Lyons">Robert F. Lyons</option>
+                                
+                                    <option value="Geena Davis">Geena Davis</option>
+                                
+                                    <option value="Jeff Goldblum">Jeff Goldblum</option>
+                                
+                                    <option value="Linda Kozlowski">Linda Kozlowski</option>
+                                
+                                    <option value="Paul Hogan">Paul Hogan</option>
+                                
+                                    <option value="Cheech Marin">Cheech Marin</option>
+                                
+                                    <option value="Tommy Chong">Tommy Chong</option>
+                                
+                                    <option value="Richard Mulligan">Richard Mulligan</option>
+                                
+                                    <option value="Robert Loggia">Robert Loggia</option>
+                                
+                                    <option value="Heather O'Rourke">Heather O'Rourke</option>
+                                
+                                    <option value="Zelda Rubinstein">Zelda Rubinstein</option>
+                                
+                                    <option value="Burt Reynolds">Burt Reynolds</option>
+                                
+                                    <option value="Dom DeLuise">Dom DeLuise</option>
+                                
+                                    <option value="Dan Aykroyd">Dan Aykroyd</option>
+                                
+                                    <option value="Donna Dixon">Donna Dixon</option>
+                                
+                                    <option value="Mary Gross">Mary Gross</option>
+                                
+                                    <option value="Victoria Jackson">Victoria Jackson</option>
+                                
+                                    <option value="Bubba Smith">Bubba Smith</option>
+                                
+                                    <option value="Scott Thomson">Scott Thomson</option>
+                                
+                                    <option value="David Graf">David Graf</option>
+                                
+                                    <option value="George Gaynes">George Gaynes</option>
+                                
+                                    <option value="Leslie Easterbrook">Leslie Easterbrook</option>
+                                
+                                    <option value="Michael Winslow">Michael Winslow</option>
+                                
+                                    <option value="Gailard Sartain">Gailard Sartain</option>
+                                
+                                    <option value="Jim Varney">Jim Varney</option>
+                                
+                                    <option value="Bruce Mahler">Bruce Mahler</option>
+                                
+                                    <option value="Ned Beatty">Ned Beatty</option>
+                                
+                                    <option value="Marion Ramsey">Marion Ramsey</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#00ff4c", "font": {"color": "black"}, "id": "Joe Pesci", "label": "Joe Pesci", "shape": "dot", "size": 6}, {"color": "#00ff4c", "font": {"color": "black"}, "id": "Robert De Niro", "label": "Robert De Niro", "shape": "dot", "size": 6}, {"color": "#00fb4c", "font": {"color": "black"}, "id": "Christopher Lloyd", "label": "Christopher Lloyd", "shape": "dot", "size": 26}, {"color": "#00fb4c", "font": {"color": "black"}, "id": "J.J. Cohen", "label": "J.J. Cohen", "shape": "dot", "size": 26}, {"color": "#00fb4c", "font": {"color": "black"}, "id": "James Tolkan", "label": "James Tolkan", "shape": "dot", "size": 26}, {"color": "#00fb4c", "font": {"color": "black"}, "id": "Lea Thompson", "label": "Lea Thompson", "shape": "dot", "size": 26}, {"color": "#00fb4c", "font": {"color": "black"}, "id": "Michael J. Fox", "label": "Michael J. Fox", "shape": "dot", "size": 26}, {"color": "#00fb4c", "font": {"color": "black"}, "id": "Thomas F. Wilson", "label": "Thomas F. Wilson", "shape": "dot", "size": 26}, {"color": "#00bf4c", "font": {"color": "black"}, "id": "Bill Paxton", "label": "Bill Paxton", "shape": "dot", "size": 6}, {"color": "#00bf4c", "font": {"color": "black"}, "id": "Lance Henriksen", "label": "Lance Henriksen", "shape": "dot", "size": 6}, {"color": "#00bb4c", "font": {"color": "black"}, "id": "Harry Dean Stanton", "label": "Harry Dean Stanton", "shape": "dot", "size": 6}, {"color": "#00bb4c", "font": {"color": "black"}, "id": "John Lurie", "label": "John Lurie", "shape": "dot", "size": 6}, {"color": "#00a04c", "font": {"color": "black"}, "id": "Mia Farrow", "label": "Mia Farrow", "shape": "dot", "size": 21}, {"color": "#00b74c", "font": {"color": "black"}, "id": "Woody Allen", "label": "Woody Allen", "shape": "dot", "size": 6}, {"color": "#00b34c", "font": {"color": "black"}, "id": "Bill Nunn", "label": "Bill Nunn", "shape": "dot", "size": 16}, {"color": "#00a84c", "font": {"color": "black"}, "id": "Giancarlo Esposito", "label": "Giancarlo Esposito", "shape": "dot", "size": 21}, {"color": "#00b34c", "font": {"color": "black"}, "id": "Samuel L. Jackson", "label": "Samuel L. Jackson", "shape": "dot", "size": 16}, {"color": "#00b34c", "font": {"color": "black"}, "id": "Spike Lee", "label": "Spike Lee", "shape": "dot", "size": 16}, {"color": "#009c4c", "font": {"color": "black"}, "id": "Sam Waterston", "label": "Sam Waterston", "shape": "dot", "size": 6}, {"color": "#00984c", "font": {"color": "black"}, "id": "Dianne Wiest", "label": "Dianne Wiest", "shape": "dot", "size": 6}, {"color": "#00944c", "font": {"color": "black"}, "id": "Caitlin O\u0027Heaney", "label": "Caitlin O\u0027Heaney", "shape": "dot", "size": 6}, {"color": "#008c4c", "font": {"color": "black"}, "id": "Bill Murray", "label": "Bill Murray", "shape": "dot", "size": 11}, {"color": "#00884c", "font": {"color": "black"}, "id": "Rick Moranis", "label": "Rick Moranis", "shape": "dot", "size": 11}, {"color": "#008c4c", "font": {"color": "black"}, "id": "Dan Hicks", "label": "Dan Hicks", "shape": "dot", "size": 6}, {"color": "#008c4c", "font": {"color": "black"}, "id": "Ted Raimi", "label": "Ted Raimi", "shape": "dot", "size": 6}, {"color": "#00884c", "font": {"color": "black"}, "id": "Harold Ramis", "label": "Harold Ramis", "shape": "dot", "size": 6}, {"color": "#00844c", "font": {"color": "black"}, "id": "John Turturro", "label": "John Turturro", "shape": "dot", "size": 6}, {"color": "#00804c", "font": {"color": "black"}, "id": "Steve Martin", "label": "Steve Martin", "shape": "dot", "size": 6}, {"color": "#007c4c", "font": {"color": "black"}, "id": "DeForest Kelley", "label": "DeForest Kelley", "shape": "dot", "size": 31}, {"color": "#007c4c", "font": {"color": "black"}, "id": "George Takei", "label": "George Takei", "shape": "dot", "size": 31}, {"color": "#007c4c", "font": {"color": "black"}, "id": "James Doohan", "label": "James Doohan", "shape": "dot", "size": 31}, {"color": "#007c4c", "font": {"color": "black"}, "id": "Leonard Nimoy", "label": "Leonard Nimoy", "shape": "dot", "size": 31}, {"color": "#007c4c", "font": {"color": "black"}, "id": "Nichelle Nichols", "label": "Nichelle Nichols", "shape": "dot", "size": 31}, {"color": "#007c4c", "font": {"color": "black"}, "id": "Walter Koenig", "label": "Walter Koenig", "shape": "dot", "size": 31}, {"color": "#007c4c", "font": {"color": "black"}, "id": "William Shatner", "label": "William Shatner", "shape": "dot", "size": 31}, {"color": "#00294c", "font": {"color": "black"}, "id": "Daniel Stern", "label": "Daniel Stern", "shape": "dot", "size": 6}, {"color": "#00294c", "font": {"color": "black"}, "id": "John Heard", "label": "John Heard", "shape": "dot", "size": 6}, {"color": "#00254c", "font": {"color": "black"}, "id": "Andrew Shue", "label": "Andrew Shue", "shape": "dot", "size": 6}, {"color": "#00254c", "font": {"color": "black"}, "id": "Elisabeth Shue", "label": "Elisabeth Shue", "shape": "dot", "size": 6}, {"color": "#00214c", "font": {"color": "black"}, "id": "Jessica Lange", "label": "Jessica Lange", "shape": "dot", "size": 6}, {"color": "#00214c", "font": {"color": "black"}, "id": "Sam Shepard", "label": "Sam Shepard", "shape": "dot", "size": 6}, {"color": "#001d4c", "font": {"color": "black"}, "id": "Danny DeVito", "label": "Danny DeVito", "shape": "dot", "size": 11}, {"color": "#001d4c", "font": {"color": "black"}, "id": "Kathleen Turner", "label": "Kathleen Turner", "shape": "dot", "size": 11}, {"color": "#001d4c", "font": {"color": "black"}, "id": "Michael Douglas", "label": "Michael Douglas", "shape": "dot", "size": 11}, {"color": "#00114c", "font": {"color": "black"}, "id": "Brian Doyle-Murray", "label": "Brian Doyle-Murray", "shape": "dot", "size": 6}, {"color": "#71084c", "font": {"color": "black"}, "id": "Chevy Chase", "label": "Chevy Chase", "shape": "dot", "size": 11}, {"color": "#000d4c", "font": {"color": "black"}, "id": "Joan Cusack", "label": "Joan Cusack", "shape": "dot", "size": 6}, {"color": "#000d4c", "font": {"color": "black"}, "id": "John Cusack", "label": "John Cusack", "shape": "dot", "size": 6}, {"color": "#00094c", "font": {"color": "black"}, "id": "Arnold Schwarzenegger", "label": "Arnold Schwarzenegger", "shape": "dot", "size": 6}, {"color": "#00094c", "font": {"color": "black"}, "id": "Sven-Ole Thorsen", "label": "Sven-Ole Thorsen", "shape": "dot", "size": 6}, {"color": "#00054c", "font": {"color": "black"}, "id": "Desmond Llewelyn", "label": "Desmond Llewelyn", "shape": "dot", "size": 6}, {"color": "#00054c", "font": {"color": "black"}, "id": "Robert Brown", "label": "Robert Brown", "shape": "dot", "size": 6}, {"color": "#00014c", "font": {"color": "black"}, "id": "John Candy", "label": "John Candy", "shape": "dot", "size": 6}, {"color": "#00014c", "font": {"color": "black"}, "id": "Larry Hankin", "label": "Larry Hankin", "shape": "dot", "size": 6}, {"color": "#01004c", "font": {"color": "black"}, "id": "Corey Feldman", "label": "Corey Feldman", "shape": "dot", "size": 6}, {"color": "#01004c", "font": {"color": "black"}, "id": "Corey Haim", "label": "Corey Haim", "shape": "dot", "size": 6}, {"color": "#01004c", "font": {"color": "black"}, "id": "Ra\u00fal Juli\u00e1", "label": "Ra\u00fal Juli\u00e1", "shape": "dot", "size": 6}, {"color": "#01004c", "font": {"color": "black"}, "id": "S\u00f4nia Braga", "label": "S\u00f4nia Braga", "shape": "dot", "size": 6}, {"color": "#09004c", "font": {"color": "black"}, "id": "Andrew McCarthy", "label": "Andrew McCarthy", "shape": "dot", "size": 6}, {"color": "#09004c", "font": {"color": "black"}, "id": "James Spader", "label": "James Spader", "shape": "dot", "size": 6}, {"color": "#0d004c", "font": {"color": "black"}, "id": "Burt Young", "label": "Burt Young", "shape": "dot", "size": 16}, {"color": "#0d004c", "font": {"color": "black"}, "id": "Sylvester Stallone", "label": "Sylvester Stallone", "shape": "dot", "size": 16}, {"color": "#0d004c", "font": {"color": "black"}, "id": "Talia Shire", "label": "Talia Shire", "shape": "dot", "size": 16}, {"color": "#0d004c", "font": {"color": "black"}, "id": "Tony Burton", "label": "Tony Burton", "shape": "dot", "size": 16}, {"color": "#25004c", "font": {"color": "black"}, "id": "Mary Woronov", "label": "Mary Woronov", "shape": "dot", "size": 6}, {"color": "#25004c", "font": {"color": "black"}, "id": "Robert Beltran", "label": "Robert Beltran", "shape": "dot", "size": 6}, {"color": "#29004c", "font": {"color": "black"}, "id": "C. Thomas Howell", "label": "C. Thomas Howell", "shape": "dot", "size": 6}, {"color": "#29004c", "font": {"color": "black"}, "id": "Patrick Swayze", "label": "Patrick Swayze", "shape": "dot", "size": 6}, {"color": "#29004c", "font": {"color": "black"}, "id": "Kiefer Sutherland", "label": "Kiefer Sutherland", "shape": "dot", "size": 6}, {"color": "#29004c", "font": {"color": "black"}, "id": "Lou Diamond Phillips", "label": "Lou Diamond Phillips", "shape": "dot", "size": 6}, {"color": "#31004c", "font": {"color": "black"}, "id": "Hume Cronyn", "label": "Hume Cronyn", "shape": "dot", "size": 6}, {"color": "#31004c", "font": {"color": "black"}, "id": "Jessica Tandy", "label": "Jessica Tandy", "shape": "dot", "size": 6}, {"color": "#35004c", "font": {"color": "black"}, "id": "Ally Sheedy", "label": "Ally Sheedy", "shape": "dot", "size": 6}, {"color": "#35004c", "font": {"color": "black"}, "id": "Judd Nelson", "label": "Judd Nelson", "shape": "dot", "size": 6}, {"color": "#39004c", "font": {"color": "black"}, "id": "Charlie Sheen", "label": "Charlie Sheen", "shape": "dot", "size": 6}, {"color": "#39004c", "font": {"color": "black"}, "id": "Emilio Estevez", "label": "Emilio Estevez", "shape": "dot", "size": 6}, {"color": "#b7004c", "font": {"color": "black"}, "id": "G. W. Bailey", "label": "G. W. Bailey", "shape": "dot", "size": 31}, {"color": "#5f004c", "font": {"color": "black"}, "id": "Steve Guttenberg", "label": "Steve Guttenberg", "shape": "dot", "size": 36}, {"color": "#41004c", "font": {"color": "black"}, "id": "Charles Bronson", "label": "Charles Bronson", "shape": "dot", "size": 6}, {"color": "#41004c", "font": {"color": "black"}, "id": "Robert F. Lyons", "label": "Robert F. Lyons", "shape": "dot", "size": 6}, {"color": "#45004c", "font": {"color": "black"}, "id": "Geena Davis", "label": "Geena Davis", "shape": "dot", "size": 6}, {"color": "#45004c", "font": {"color": "black"}, "id": "Jeff Goldblum", "label": "Jeff Goldblum", "shape": "dot", "size": 6}, {"color": "#49004c", "font": {"color": "black"}, "id": "Linda Kozlowski", "label": "Linda Kozlowski", "shape": "dot", "size": 6}, {"color": "#49004c", "font": {"color": "black"}, "id": "Paul Hogan", "label": "Paul Hogan", "shape": "dot", "size": 6}, {"color": "#4d004c", "font": {"color": "black"}, "id": "Cheech Marin", "label": "Cheech Marin", "shape": "dot", "size": 6}, {"color": "#4d004c", "font": {"color": "black"}, "id": "Tommy Chong", "label": "Tommy Chong", "shape": "dot", "size": 6}, {"color": "#4d004c", "font": {"color": "black"}, "id": "Richard Mulligan", "label": "Richard Mulligan", "shape": "dot", "size": 6}, {"color": "#4d004c", "font": {"color": "black"}, "id": "Robert Loggia", "label": "Robert Loggia", "shape": "dot", "size": 6}, {"color": "#55004c", "font": {"color": "black"}, "id": "Heather O\u0027Rourke", "label": "Heather O\u0027Rourke", "shape": "dot", "size": 6}, {"color": "#55004c", "font": {"color": "black"}, "id": "Zelda Rubinstein", "label": "Zelda Rubinstein", "shape": "dot", "size": 6}, {"color": "#a0004c", "font": {"color": "black"}, "id": "Burt Reynolds", "label": "Burt Reynolds", "shape": "dot", "size": 11}, {"color": "#58004c", "font": {"color": "black"}, "id": "Dom DeLuise", "label": "Dom DeLuise", "shape": "dot", "size": 6}, {"color": "#a0004c", "font": {"color": "black"}, "id": "Dan Aykroyd", "label": "Dan Aykroyd", "shape": "dot", "size": 11}, {"color": "#5c004c", "font": {"color": "black"}, "id": "Donna Dixon", "label": "Donna Dixon", "shape": "dot", "size": 6}, {"color": "#60004c", "font": {"color": "black"}, "id": "Mary Gross", "label": "Mary Gross", "shape": "dot", "size": 6}, {"color": "#60004c", "font": {"color": "black"}, "id": "Victoria Jackson", "label": "Victoria Jackson", "shape": "dot", "size": 6}, {"color": "#a2004c", "font": {"color": "black"}, "id": "Bubba Smith", "label": "Bubba Smith", "shape": "dot", "size": 46}, {"color": "#64004c", "font": {"color": "black"}, "id": "Scott Thomson", "label": "Scott Thomson", "shape": "dot", "size": 31}, {"color": "#a2004c", "font": {"color": "black"}, "id": "David Graf", "label": "David Graf", "shape": "dot", "size": 46}, {"color": "#a2004c", "font": {"color": "black"}, "id": "George Gaynes", "label": "George Gaynes", "shape": "dot", "size": 46}, {"color": "#a2004c", "font": {"color": "black"}, "id": "Leslie Easterbrook", "label": "Leslie Easterbrook", "shape": "dot", "size": 46}, {"color": "#a2004c", "font": {"color": "black"}, "id": "Michael Winslow", "label": "Michael Winslow", "shape": "dot", "size": 46}, {"color": "#90004c", "font": {"color": "black"}, "id": "Gailard Sartain", "label": "Gailard Sartain", "shape": "dot", "size": 6}, {"color": "#90004c", "font": {"color": "black"}, "id": "Jim Varney", "label": "Jim Varney", "shape": "dot", "size": 6}, {"color": "#94004c", "font": {"color": "black"}, "id": "Bruce Mahler", "label": "Bruce Mahler", "shape": "dot", "size": 26}, {"color": "#e7004c", "font": {"color": "black"}, "id": "Ned Beatty", "label": "Ned Beatty", "shape": "dot", "size": 6}, {"color": "#eb004c", "font": {"color": "black"}, "id": "Marion Ramsey", "label": "Marion Ramsey", "shape": "dot", "size": 26}]);
+                  edges = new vis.DataSet([{"color": "#00ff4c", "from": "Joe Pesci", "to": "Robert De Niro", "value": 15}, {"color": "#00fb4c", "from": "Christopher Lloyd", "to": "J.J. Cohen", "value": 15}, {"color": "#00fb4c", "from": "Christopher Lloyd", "to": "James Tolkan", "value": 15}, {"color": "#00fb4c", "from": "Christopher Lloyd", "to": "Lea Thompson", "value": 15}, {"color": "#00fb4c", "from": "Christopher Lloyd", "to": "Michael J. Fox", "value": 15}, {"color": "#00fb4c", "from": "Christopher Lloyd", "to": "Thomas F. Wilson", "value": 15}, {"color": "#00fb4c", "from": "J.J. Cohen", "to": "James Tolkan", "value": 15}, {"color": "#00fb4c", "from": "J.J. Cohen", "to": "Lea Thompson", "value": 15}, {"color": "#00fb4c", "from": "J.J. Cohen", "to": "Michael J. Fox", "value": 15}, {"color": "#00fb4c", "from": "J.J. Cohen", "to": "Thomas F. Wilson", "value": 15}, {"color": "#00fb4c", "from": "James Tolkan", "to": "Lea Thompson", "value": 15}, {"color": "#00fb4c", "from": "James Tolkan", "to": "Michael J. Fox", "value": 15}, {"color": "#00fb4c", "from": "James Tolkan", "to": "Thomas F. Wilson", "value": 15}, {"color": "#00fb4c", "from": "Lea Thompson", "to": "Michael J. Fox", "value": 15}, {"color": "#00fb4c", "from": "Lea Thompson", "to": "Thomas F. Wilson", "value": 15}, {"color": "#00fb4c", "from": "Michael J. Fox", "to": "Thomas F. Wilson", "value": 15}, {"color": "#00bf4c", "from": "Bill Paxton", "to": "Lance Henriksen", "value": 15}, {"color": "#00bb4c", "from": "Harry Dean Stanton", "to": "John Lurie", "value": 15}, {"color": "#00b74c", "from": "Mia Farrow", "to": "Woody Allen", "value": 25}, {"color": "#00b34c", "from": "Bill Nunn", "to": "Giancarlo Esposito", "value": 15}, {"color": "#00b34c", "from": "Bill Nunn", "to": "Samuel L. Jackson", "value": 15}, {"color": "#00b34c", "from": "Bill Nunn", "to": "Spike Lee", "value": 15}, {"color": "#00b34c", "from": "Giancarlo Esposito", "to": "Samuel L. Jackson", "value": 15}, {"color": "#00b34c", "from": "Giancarlo Esposito", "to": "Spike Lee", "value": 15}, {"color": "#00b34c", "from": "Samuel L. Jackson", "to": "Spike Lee", "value": 15}, {"color": "#009c4c", "from": "Mia Farrow", "to": "Sam Waterston", "value": 15}, {"color": "#00984c", "from": "Dianne Wiest", "to": "Mia Farrow", "value": 15}, {"color": "#00944c", "from": "Caitlin O\u0027Heaney", "to": "Mia Farrow", "value": 15}, {"color": "#00904c", "from": "Bill Murray", "to": "Rick Moranis", "value": 15}, {"color": "#008c4c", "from": "Dan Hicks", "to": "Ted Raimi", "value": 15}, {"color": "#00884c", "from": "Bill Murray", "to": "Harold Ramis", "value": 15}, {"color": "#00844c", "from": "Giancarlo Esposito", "to": "John Turturro", "value": 15}, {"color": "#00804c", "from": "Rick Moranis", "to": "Steve Martin", "value": 15}, {"color": "#007c4c", "from": "DeForest Kelley", "to": "George Takei", "value": 20}, {"color": "#007c4c", "from": "DeForest Kelley", "to": "James Doohan", "value": 20}, {"color": "#007c4c", "from": "DeForest Kelley", "to": "Leonard Nimoy", "value": 20}, {"color": "#007c4c", "from": "DeForest Kelley", "to": "Nichelle Nichols", "value": 20}, {"color": "#007c4c", "from": "DeForest Kelley", "to": "Walter Koenig", "value": 20}, {"color": "#007c4c", "from": "DeForest Kelley", "to": "William Shatner", "value": 20}, {"color": "#007c4c", "from": "George Takei", "to": "James Doohan", "value": 20}, {"color": "#007c4c", "from": "George Takei", "to": "Leonard Nimoy", "value": 20}, {"color": "#007c4c", "from": "George Takei", "to": "Nichelle Nichols", "value": 20}, {"color": "#007c4c", "from": "George Takei", "to": "Walter Koenig", "value": 20}, {"color": "#007c4c", "from": "George Takei", "to": "William Shatner", "value": 20}, {"color": "#007c4c", "from": "James Doohan", "to": "Leonard Nimoy", "value": 20}, {"color": "#007c4c", "from": "James Doohan", "to": "Nichelle Nichols", "value": 20}, {"color": "#007c4c", "from": "James Doohan", "to": "Walter Koenig", "value": 20}, {"color": "#007c4c", "from": "James Doohan", "to": "William Shatner", "value": 20}, {"color": "#007c4c", "from": "Leonard Nimoy", "to": "Nichelle Nichols", "value": 20}, {"color": "#007c4c", "from": "Leonard Nimoy", "to": "Walter Koenig", "value": 20}, {"color": "#007c4c", "from": "Leonard Nimoy", "to": "William Shatner", "value": 20}, {"color": "#007c4c", "from": "Nichelle Nichols", "to": "Walter Koenig", "value": 20}, {"color": "#007c4c", "from": "Nichelle Nichols", "to": "William Shatner", "value": 20}, {"color": "#007c4c", "from": "Walter Koenig", "to": "William Shatner", "value": 20}, {"color": "#00294c", "from": "Daniel Stern", "to": "John Heard", "value": 15}, {"color": "#00254c", "from": "Andrew Shue", "to": "Elisabeth Shue", "value": 15}, {"color": "#00214c", "from": "Jessica Lange", "to": "Sam Shepard", "value": 15}, {"color": "#001d4c", "from": "Danny DeVito", "to": "Kathleen Turner", "value": 15}, {"color": "#001d4c", "from": "Danny DeVito", "to": "Michael Douglas", "value": 15}, {"color": "#001d4c", "from": "Kathleen Turner", "to": "Michael Douglas", "value": 15}, {"color": "#00114c", "from": "Brian Doyle-Murray", "to": "Chevy Chase", "value": 15}, {"color": "#000d4c", "from": "Joan Cusack", "to": "John Cusack", "value": 15}, {"color": "#00094c", "from": "Arnold Schwarzenegger", "to": "Sven-Ole Thorsen", "value": 15}, {"color": "#00054c", "from": "Desmond Llewelyn", "to": "Robert Brown", "value": 15}, {"color": "#00014c", "from": "John Candy", "to": "Larry Hankin", "value": 15}, {"color": "#01004c", "from": "Corey Feldman", "to": "Corey Haim", "value": 15}, {"color": "#01004c", "from": "Ra\u00fal Juli\u00e1", "to": "S\u00f4nia Braga", "value": 15}, {"color": "#09004c", "from": "Andrew McCarthy", "to": "James Spader", "value": 15}, {"color": "#0d004c", "from": "Burt Young", "to": "Sylvester Stallone", "value": 15}, {"color": "#0d004c", "from": "Burt Young", "to": "Talia Shire", "value": 15}, {"color": "#0d004c", "from": "Burt Young", "to": "Tony Burton", "value": 15}, {"color": "#0d004c", "from": "Sylvester Stallone", "to": "Talia Shire", "value": 15}, {"color": "#0d004c", "from": "Sylvester Stallone", "to": "Tony Burton", "value": 15}, {"color": "#0d004c", "from": "Talia Shire", "to": "Tony Burton", "value": 15}, {"color": "#25004c", "from": "Mary Woronov", "to": "Robert Beltran", "value": 15}, {"color": "#29004c", "from": "C. Thomas Howell", "to": "Patrick Swayze", "value": 15}, {"color": "#29004c", "from": "Kiefer Sutherland", "to": "Lou Diamond Phillips", "value": 15}, {"color": "#31004c", "from": "Hume Cronyn", "to": "Jessica Tandy", "value": 25}, {"color": "#35004c", "from": "Ally Sheedy", "to": "Judd Nelson", "value": 15}, {"color": "#39004c", "from": "Charlie Sheen", "to": "Emilio Estevez", "value": 15}, {"color": "#3d004c", "from": "G. W. Bailey", "to": "Steve Guttenberg", "value": 15}, {"color": "#41004c", "from": "Charles Bronson", "to": "Robert F. Lyons", "value": 15}, {"color": "#45004c", "from": "Geena Davis", "to": "Jeff Goldblum", "value": 15}, {"color": "#49004c", "from": "Linda Kozlowski", "to": "Paul Hogan", "value": 15}, {"color": "#4d004c", "from": "Cheech Marin", "to": "Tommy Chong", "value": 15}, {"color": "#4d004c", "from": "Richard Mulligan", "to": "Robert Loggia", "value": 15}, {"color": "#55004c", "from": "Heather O\u0027Rourke", "to": "Zelda Rubinstein", "value": 15}, {"color": "#58004c", "from": "Burt Reynolds", "to": "Dom DeLuise", "value": 15}, {"color": "#5c004c", "from": "Dan Aykroyd", "to": "Donna Dixon", "value": 15}, {"color": "#60004c", "from": "Mary Gross", "to": "Victoria Jackson", "value": 15}, {"color": "#64004c", "from": "Bubba Smith", "to": "Scott Thomson", "value": 15}, {"color": "#64004c", "from": "Bubba Smith", "to": "Steve Guttenberg", "value": 15}, {"color": "#64004c", "from": "David Graf", "to": "Scott Thomson", "value": 15}, {"color": "#64004c", "from": "David Graf", "to": "Steve Guttenberg", "value": 15}, {"color": "#64004c", "from": "George Gaynes", "to": "Scott Thomson", "value": 15}, {"color": "#64004c", "from": "George Gaynes", "to": "Steve Guttenberg", "value": 15}, {"color": "#64004c", "from": "Leslie Easterbrook", "to": "Scott Thomson", "value": 15}, {"color": "#64004c", "from": "Leslie Easterbrook", "to": "Steve Guttenberg", "value": 15}, {"color": "#64004c", "from": "Michael Winslow", "to": "Scott Thomson", "value": 15}, {"color": "#64004c", "from": "Michael Winslow", "to": "Steve Guttenberg", "value": 15}, {"color": "#64004c", "from": "Scott Thomson", "to": "Steve Guttenberg", "value": 15}, {"color": "#90004c", "from": "Gailard Sartain", "to": "Jim Varney", "value": 15}, {"color": "#94004c", "from": "Bruce Mahler", "to": "Bubba Smith", "value": 15}, {"color": "#94004c", "from": "Bruce Mahler", "to": "David Graf", "value": 15}, {"color": "#94004c", "from": "Bruce Mahler", "to": "George Gaynes", "value": 15}, {"color": "#94004c", "from": "Bruce Mahler", "to": "Leslie Easterbrook", "value": 15}, {"color": "#94004c", "from": "Bruce Mahler", "to": "Michael Winslow", "value": 15}, {"color": "#a8004c", "from": "Bubba Smith", "to": "David Graf", "value": 20}, {"color": "#a8004c", "from": "Bubba Smith", "to": "George Gaynes", "value": 20}, {"color": "#a8004c", "from": "Bubba Smith", "to": "Leslie Easterbrook", "value": 20}, {"color": "#a8004c", "from": "Bubba Smith", "to": "Michael Winslow", "value": 20}, {"color": "#a8004c", "from": "David Graf", "to": "George Gaynes", "value": 20}, {"color": "#a8004c", "from": "David Graf", "to": "Leslie Easterbrook", "value": 20}, {"color": "#a8004c", "from": "David Graf", "to": "Michael Winslow", "value": 20}, {"color": "#a8004c", "from": "George Gaynes", "to": "Leslie Easterbrook", "value": 20}, {"color": "#a8004c", "from": "George Gaynes", "to": "Michael Winslow", "value": 20}, {"color": "#a8004c", "from": "Leslie Easterbrook", "to": "Michael Winslow", "value": 20}, {"color": "#cf004c", "from": "Bubba Smith", "to": "G. W. Bailey", "value": 15}, {"color": "#cf004c", "from": "David Graf", "to": "G. W. Bailey", "value": 15}, {"color": "#cf004c", "from": "G. W. Bailey", "to": "George Gaynes", "value": 15}, {"color": "#cf004c", "from": "G. W. Bailey", "to": "Leslie Easterbrook", "value": 15}, {"color": "#cf004c", "from": "G. W. Bailey", "to": "Michael Winslow", "value": 15}, {"color": "#e3004c", "from": "Chevy Chase", "to": "Dan Aykroyd", "value": 15}, {"color": "#e7004c", "from": "Burt Reynolds", "to": "Ned Beatty", "value": 15}, {"color": "#eb004c", "from": "Bubba Smith", "to": "Marion Ramsey", "value": 15}, {"color": "#eb004c", "from": "David Graf", "to": "Marion Ramsey", "value": 15}, {"color": "#eb004c", "from": "George Gaynes", "to": "Marion Ramsey", "value": 15}, {"color": "#eb004c", "from": "Leslie Easterbrook", "to": "Marion Ramsey", "value": 15}, {"color": "#eb004c", "from": "Marion Ramsey", "to": "Michael Winslow", "value": 15}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"gravitationalConstant": -84, "centralGravity": 0.09, "springLength": 20, "springConstant": 0.035}, "minVelocity": 0.18, "solver": "forceAtlas2Based"}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
