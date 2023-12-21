@@ -9,6 +9,7 @@ pio.templates["patterndetectives"] = go.layout.Template(
     paper_bgcolor = "#f9f4e3",
     plot_bgcolor = "#e9dcc8",
     font_color="#392323",
+    font_family="Raleway"
     )
 )
 
