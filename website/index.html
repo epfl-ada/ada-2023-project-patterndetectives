@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <header>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ada website</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+       -->
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">  
+
+        <link rel="stylesheet" href="style.css">
+        
+    </header>
+    <body>
+        <div class="header">
+        </div> 
+<h1>Harmony on screen : </h1>
+<p><strong>Team members</strong>: <a href="https://github.com/Lugiasc">Adrien Vauthey</a>, <a href="https://github.com/Kaan-wq">Kaan Uçar</a>, <a href="https://github.com/Eliasepfl">Elias Naha</a>, <a href="https://github.com/sdjfkjsh">Keren Bensoussan</a>, <a href="https://github.com/merlebleue">Julien Ars</a></p>
+<p><strong>Data zip folder to drop in the project :</strong> https://drive.google.com/file/d/1H5PKd_VSk6jRUzvEh8h3AlxLpLpTcbMr/view?usp=drive_link</p>
+<p><strong>The main notebook is <code>main.ipynb</code></strong></p>
+<h1 id="table-of-contents">Table of contents</h1>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#research-questions">Research questions</a></li>
+<li><a href="#proposed-dataset">Proposed dataset</a></li>
+<li><a href="#methods">Methods</a></li>
+<li><a href="#proposed-timeline">Proposed timeline</a></li>
+<li><a href="#organization-within-the-team">Organization within the team</a></li>
+</ul>
+<h1 id="abstract">Abstract</h1>
+<p>This project aims to delve into the intricate dynamics of successful collaboration in the film industry, extending beyond conventional success metrics to explore the chemistry between actors through frequent co-starring. The approach involves constructing actor collaboration networks, interconnecting actors, scenarists, and directors within a comprehensive web network. Employing a granular methodology, the web network is subdivided based on movie genres, allowing for the analysis of collaborative subgraphs. The focus is on identifying patterns and relationships that contribute to the success of movies within each genre. This research not only provides insights into individual performances but also offers an understanding of collaborative networks. By incorporating diverse talents and considering genre-specific nuances, the project aims to yield valuable insights for future filmmaking collaborations, potentially influencing industry practices and enhancing the likelihood of successful movie projects. The use of network analysis tools adds a visual dimension, aiding in the interpretation of the complex web of collaborations in the film industry.</p>
+<h1 id="research-questions">Research questions</h1>
+<ol type="1">
+<li><p><strong>How does the frequency of actor co-starring impact the chemistry and success of collaborative films?</strong></p></li>
+<li><p><strong>What patterns emerge when constructing and analyzing actor collaboration networks?</strong></p></li>
+<li><p><strong>To what extent does the involvement of specific individuals (actors, scenarists, directors) contribute to the overall success of a collaborative project?</strong></p></li>
+<li><p><strong>How does the collaborative network evolve over time, and are there recurring partnerships or clusters of individuals within the film industry?</strong></p></li>
+<li><p><strong>What role does genre play in shaping collaborative dynamics, and how do successful collaborations differ across genres?</strong></p></li>
+<li><p><strong>Are there specific collaborative subgraphs within the network that consistently yield successful movies, and what are the characteristics of these subgraphs?</strong></p></li>
+<li><p><strong>How do factors such as creative differences, interpersonal relationships, and previous collaborative experiences impact the success of film projects within the identified networks?</strong></p></li>
+<li><p><strong>Can the identified patterns and insights be applied to predict the potential success of future collaborative projects in the film industry?</strong></p></li>
+<li><p><strong>In what ways does the inclusion of scenarists and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?</strong></p></li>
+<li><p><strong>How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?</strong></p></li>
+</ol>
+<p>Addressing these research questions will likely provide a comprehensive understanding of the collaborative dynamics in the film industry and offer practical insights for future filmmaking endeavors.</p>
+<h1 id="proposed-dataset">Proposed dataset</h1>
+<p><a href="https://developer.imdb.com/non-commercial-datasets/">IMDb dataset</a>: Used several datasets from IMDb to create a single dataset that is used to populate our own datasets with more information. * <a href="https://datasets.imdbws.com/title.basics.tsv.gz">IMDb title</a>: Contains the basic information of movies. * <a href="https://datasets.imdbws.com/title.crew.tsv.gz">IMDb crew</a>: Contains the directors and scenarists of movies. * <a href="https://datasets.imdbws.com/title.ratings.tsv.gz">IMDb ratings</a>: Contains the ratings of movies. * <a href="https://datasets.imdbws.com/name.basics.tsv.gz">IMDb name</a>: Contains the basic information of actors, directors and scenarists. * <a href="https://datasets.imdbws.com/title.principals.tsv.gz">IMDb principals</a>: Contains information of people involved in movies.</p>
+<h1 id="methods">Methods</h1>
+<h3 id="database-manager">1. Database manager</h3>
+<p>Creation of the database and the population of the database with the data from the IMDb dataset.</p>
+<ul>
+<li>Merging database: Merge the IMDb datasets into a single dataset that will be used to populate the database.</li>
+<li>Cleaning data: Clean the data from the IMDb dataset to remove duplicates and to remove data that is not relevant to the project.</li>
+</ul>
+<h3 id="analysis">2. Analysis</h3>
+<p>Analysis of the data to answer the research questions using the CMU movie corpus.</p>
+<ul>
+<li>Processing data: Process the data from the corpus.
+<ul>
+<li>Character data: Analysis of the character dataset</li>
+<li>Movie data: Analysis of the movie dataset</li>
+<li>Revenue analysis around month of release: Categorize each movie into separate bins based on two criterias. Firstly, the first two genres they appear to belong to, and secondly, the month in which they were released.</li>
+</ul></li>
+<li>Merging all databases: Merge databases to start performing some analysis on success of a collaboration between actors.</li>
+</ul>
+<h3 id="transformation-around-data.">3. Transformation around data.</h3>
+<ul>
+<li>Inflation process: Adjust the revenue of each movie to the inflation of the year it was released in.</li>
+<li>Creation of new features on the merged database: Creation of new features to help understand the evolution of actors individually.</li>
+<li>Creation of a database of pairs of actors: Creation of a database of pairs of actors that have worked together in a movie.</li>
+</ul>
+<h3 id="actor-network">4. Actor network</h3>
+<p><strong>Nodes</strong>: they represent actors, the bigger a node is, the more the actor has made different collaborations.<br />
+<strong>Edges</strong>: they represent a collaboration between a pair of actors, the size of the edge represents the number of collaborations they have made</p>
+<h3 id="propensity-score-matching">5. Propensity score matching</h3>
+<p>Propensity score matching to predict the revenue of the movie using a linear regression.</p>
+<h1 id="proposed-timeline">Proposed timeline</h1>
+<p><strong>Before milestone 2: Define metrics and parameters</strong> - Refine and finalize the success metrics for movies. - Determine parameters for measuring chemistry and collaboration success. - Identify specific criteria for categorizing successful collaborations.</p>
+<p><strong>Week 1: Construct collaborative networks</strong> - Utilize the cleaned data to construct actor collaboration networks. - Establish links between actors, scenarists, and directors based on their collaborative history. - Apply network analysis techniques to identify central nodes and clusters.</p>
+<p><strong>Task 1: Genre-specific subnetworks</strong> - Implement the granular approach by dividing the collaborative network into subnetworks based on movie genres. - Analyze and visualize genre-specific subnetworks. - Identify patterns and relationships within each genre.</p>
+<p><strong>Task 2: Analyze collaborative subgraphs</strong> - Focus on collaborative subgraphs within each genre to determine their impact on successful movies. - Explore recurring partnerships and their influence on success. - Examine how external factors may affect specific subgraphs.</p>
+<p><strong>Task 3: Prepare the datastory website</strong> - Explore the possibilities for a website using Jekyll - Prepare the layout of the website - Implement the analysis findings into the website</p>
+<p><strong>Week 4 : Finalize analysis and the datastory</strong> - Synthesize findings from genre-specific analyses. - Draw conclusions and insights. - Review the prepared datastory and make changes if necessary.</p>
+<p>Week 1 and 4 will be done by all team members. Task 1, 2 and 3 will be done by different group members (2 people for Task 1, 2 people for Task 2, and 1 for Task 3), and should be finished by the end of week 3.</p>
+<h1 id="organization-within-the-team">Organization within the team</h1>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Responsible</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Task 1</td>
+<td style="text-align: left;">Adrien and Julien</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Task 2</td>
+<td style="text-align: left;">Elias and Kaan</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Task 3</td>
+<td style="text-align: left;">Keren</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Everythin else</td>
+<td style="text-align: left;">Whole team</td>
+</tr>
+<hr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+        </div>
+    </body>
+</html>

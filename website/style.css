@@ -1,0 +1,129 @@
+header{
+  background-image: url(pic/header.jpeg);
+  background-repeat: no-repeat;
+  background-size: 1500px 300px;
+  text-align: left;
+  color: white;
+  height: 250px;
+  padding: 0;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+    color: #392323;
+    background-color: #f9f4e3;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  .font-secondary {
+    font-family: 'Lora', serif !important;
+  }
+
+  .text-h2 {
+    font-size: 36px;
+    line-height: 52px;
+
+    @media (min-width: @screen-sm-min) {
+      font-size: 32px;
+      line-height: 48px;
+    }
+  }
+
+  .text-h3 {
+    font-size: 32px;
+    line-height: 36px;
+    font-weight: 500;
+
+    @media (min-width: @screen-sm-min) {
+      font-size: 28px;
+      line-height: 32px;
+    }
+  }
+
+  .text-body-1 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 32px;
+
+    @media (min-width: @screen-sm-min) {
+      font-size: 18px;
+      line-height: 28px;
+    }
+  }
+
+  .text-body-2 {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+
+    @media (min-width: @screen-sm-min) {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+
+  .blockquote {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 36px;
+    text-transform: uppercase;
+    text-align: center;
+
+    @media (min-width: @screen-sm-min) {
+      font-size: 28px;
+    }  
+  }
+
+  .text-caption {
+    font-size: 14px;
+    line-height: 22px;
+
+    @media (min-width: @screen-sm-min) {
+      font-size: 12px;
+      line-height: 18px; 
+    }
+  }
+
+  .text-overline {
+    font-size: 10px;
+    line-height: 16px;
+
+    @media (min-width: @screen-sm-min) {
+      font-size: 10px;
+      line-height: 16px; 
+    }
+  }
+
+  a, li > a {
+    color: #39312c !important;
+    border-bottom: 2px solid #39312c;
+    text-decoration: none;
+    word-break: break-word;
+  }
+
+  .container.landing {
+    padding: 96px 0;
+  }
+
+  /* Style for flourish iframe */
+  iframe.flourish-iframe {
+    width: 100%;
+    height: auto;
+    border: unset;
+  }
+
+  hr {
+    width: 90%;
+    height: 0.5px;
+    background-color: #bcbab6
+  }
+
+  /* Small devices (tablets, 768px and up) */
+  /* @media (min-width: @screen-sm-min) { ... } */
+
+  /* Medium devices (desktops, 992px and up) */
+  /* @media (min-width: @screen-md-min) { ... } */
+
+  /* Large devices (large desktops, 1200px and up) */
+  /* @media (min-width: @screen-lg-min) { ... } */
