@@ -20,34 +20,28 @@ This project aims to delve into the intricate dynamics of successful collaborati
 # Research questions, replaced in the order of the data story 
 ## A Lone Figure in the Filmic Expanse: Assessing Personal Influence and Prolificacy
 
-1. **To what extent does the involvement of specific individuals (actors, scenarists, directors) contribute to the overall success of a collaborative project?**\
-=> This question has been done and answered by Julien and Keren
-2. **How does the frequency of actor co-starring impact the chemistry and success of collaborative films?** \
-=> This question has been done and answered by Julien and Keren
+1. **To what extent does the involvement of specific individuals (actors, composers, directors) contribute to the overall success of a collaborative project?**
+
+2. **How does the frequency of actor co-starring impact the chemistry and success of collaborative films?** 
 
 ## From Solo Endeavors to Collective Synergy: The Transformation through Alchemy and Networks
 
 3. **What patterns emerge when constructing and analyzing actor collaboration networks, and how do these patterns differ across various movie genres?**\
 => This question has been merged with the question 6 because of similarity and is partially answered there
 
-4. **How does the collaborative network evolve over time, and are there recurring partnerships or clusters of individuals within the film industry?**\
-=> This question has been done and answered
+4. **How does the collaborative network evolve over time, and are there recurring partnerships or clusters of individuals within the film industry?**
 
-5. **Are there specific collaborative subgraphs within the network that consistently yield successful movies, and what are the characteristics of these subgraphs?**\
-=> This question has been done and answered\
+5. **Are there specific collaborative subgraphs within the network that consistently yield successful movies, and what are the characteristics of these subgraphs?**
 
 6. **In what ways does the inclusion of composers and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?**
 
 ## Deciphering the Dynamics of Film Collaboration: Impact, Genre Influence, and Forecasting Success
 
-7. **How do factors such as creative differences, interpersonal relationships, and previous collaborative experiences impact the success of film projects within the identified networks?**\
-=> This question has been done and answered
+7. **How do factors such as creative differences, interpersonal relationships, and previous collaborative experiences impact the success of film projects within the identified networks?**
 
-8. **What role does genre play in shaping collaborative dynamics, and how do successful collaborations differ across genres?**\
-=> This question has been done and answered
+8. **What role does genre play in shaping collaborative dynamics, and how do successful collaborations differ across genres?**
 
-9. **Can the identified patterns and insights be applied to predict the potential success of future collaborative projects in the film industry?**\
-=> This question has been done and answered
+9. **Can the identified patterns and insights be applied to predict the potential success of future collaborative projects in the film industry?**
 
 10. **How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?**\
 => The researches for this question ended really deep, and we didn't find any relevant results so this question will be left unanswered.
@@ -132,4 +126,11 @@ Week 1 and 4 will be done by all team members. Task 1, 2 and 3 will be done by d
 | Task 3 | Keren |
 | Everythin else | Whole team |
 
-The collaboration plan was respected, everyone answered their question except for the last question which was deemed to hard.
+The collaboration plan was respected, everyone answered their question except for the last question which was deemed too hard.
+
+# Contributions of each team member
+- Adrien Vauthey: Worked on some of the data analysis, created the dataframe of pairs of actors, answered questions 6, 7 and 9.
+- Kaan Uçar:
+- Elias Naha:
+- Keren Bensoussan:
+- Julien Ars:
