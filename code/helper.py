@@ -205,6 +205,33 @@ def preprocess_data(df1):
 
     return final_df
 
+def preprocess_data_directors_composers(df1):
+    df2 = df1.copy()
+
+
+    #Filter the years to have only the films from 1980 to 2023
+    df2 = df2[(df2['Movie_release'] >= 1980) & (df2['Movie_release'] <= 2023)]
+
+
+    # Step 1: Create a mapping DataFrame for 'ALl_pairs' to 'Credit_1', 'Credit_2', and 'Genre'
+    actor_pairs_mapping = df2[['All_pairs', 'Credit_1', 'Credit_2', 'Genre']].drop_duplicates()
+
+    # Step 2: Grouping by 'Actor_pairs' and calculating the required metrics along with including 'Genre'
+    grouped_df = df2.groupby('All_pairs').agg(
+        Average_Movie_revenue=pd.NamedAgg(column='2023 valued revenue', aggfunc='mean'),
+        Average_Movie_rating=pd.NamedAgg(column='Movie_rating', aggfunc='mean'),
+        Count=pd.NamedAgg(column='Movie_name', aggfunc='count')
+    )
+
+    # Reset index in the grouped DataFrame
+    grouped_df.reset_index(inplace=True)
+
+    # Step 3: Merge the aggregated DataFrame with the mapping DataFrame
+    # Note: The merge may result in multiple rows per actor pair if they have multiple genres.
+    final_df = pd.merge(grouped_df, actor_pairs_mapping, on='All_pairs')
+
+    return final_df
+
 
 # Function to create the ranking system
 def create_ranking_system(final_df):
