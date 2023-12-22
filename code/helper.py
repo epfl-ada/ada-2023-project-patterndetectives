@@ -698,7 +698,7 @@ def analyze_and_print_clusters(rating_stand):
         print(f"  Actors: {info['actors']}")
         print()
 
-    return large_clusters
+    return large_clusters, cluster_averages
 
 
 def perform_characteristic_t_tests(df1, cluster_averages, characteristics):
@@ -787,7 +787,7 @@ def create_plotly_bar_chart(cluster_averages, large_clusters, df1):
     bar_chart.update_traces(hoverinfo='text', hoverlabel=dict(namelength=-1))
 
     # Save the chart as an HTML file
-    bar_chart.write_html(file_name)
+    bar_chart.write_html("bar_chart.html")
 
     return bar_chart
 
