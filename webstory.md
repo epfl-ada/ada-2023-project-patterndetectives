@@ -1,18 +1,10 @@
 # Harmony on screen: Unraveling successful collaborations in the american movie industry
 
-The movie industry, often hailed as the epitome of modern storytelling, stands as a captivating realm where creativity converges with technology, talent, and cultural expression. Spanning decades, this dynamic and ever-evolving landscape has become an integral part of global entertainment, captivating audiences and transcending borders. Beyond the enchanting narratives that unfold on the silver screen, the movie industry weaves a complex tapestry that extends its influence far beyond the confines of theaters.
+The movie industry, often considered the pinnacle of modern storytelling, is a captivating realm where creativity meets technology, talent, and cultural expression. Across decades, this ever-evolving landscape has become a crucial element in global entertainment, captivating audiences worldwide and transcending geographical boundaries. Beyond the captivating narratives on the silver screen, the movie industry weaves a complex tapestry that extends its influence far beyond the confines of theaters.
 
-At its core, the movie industry is a multifaceted ecosystem, comprising filmmakers, actors, writers, directors, producers, and a myriad of other creative minds, each contributing their unique talents to craft compelling stories. The collaborative nature of filmmaking fosters a delicate dance of ideas and visions, resulting in the birth of cinematic masterpieces that resonate with audiences on emotional, intellectual, and even spiritual levels. The relationships forged within the movie industry are as diverse as the stories it tells. Collaboration and synergy are at the heart of its success, with artists and technicians working in harmony to bring visions to life.
+At its core, the movie industry is a multifaceted ecosystem, comprising filmmakers, actors, writers, directors, producers, and numerous other creative minds. Each individual contributes unique talents to craft compelling stories. The collaborative nature of filmmaking fosters a delicate dance of ideas and visions, resulting in the creation of cinematic masterpieces that resonate with audiences on emotional, intellectual, and even spiritual levels. The relationships formed within the movie industry are as diverse as the stories it tells. Collaboration and synergy are at the heart of its success, with artists and technicians working in harmony to bring visions to life.
 
-In this exploration of the movie industry, we will delve into the intricate relationships formed both on and off the screen, beyond traditional success metrics. From the creative collaborations that birth cinematic wonders to the societal impact that transcends the theater walls, join us on a journey through the enchanting world where imagination meets reality : the world of the movie industry.
-
---
-
-In the ever-evolving realm of filmmaking, success is often attributed to the synergy between actors, scenarists, and directors. Our project seeks to unravel the intricate dynamics of this collaboration, going beyond traditional success metrics. By constructing comprehensive actor collaboration networks, we aim to explore the chemistry that arises from frequent co-starring and its impact on the success of movies. Our approach involves the creation of a web network that interconnects actors, scenarists, and directors, using the data from **CMU Movie Summary Corpus**.
-
-___
-
-In the ever-evolving world of filmmaking, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, scenarists, and directors. Forget the usual success metrics – we're crafting comprehensive actor collaboration networks to find out the chemistry born from frequent co-starring. Brace yourself for a web network extravaganza that connects the dots between actors, scenarists, and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight on the real MVPs behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
+In this exploration of the movie industry, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, scenarists, and directors. Brace yourself for a web network that connects the dots between actors, scenarists, and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
 
 ## I don't like people, sorry
 If you want to reduce the number of actors in your movie, unfortunately, that depends on your scenario. You can even have one actor playing all the roles ! However, in order to ensure its success, let's see which specific individual you should cast.
@@ -24,25 +16,26 @@ AS we can see blablabla
 --
 
 ## Tell me Johnny, who do you see often ?
-These actors practically have each other on speed dial with their frequent collaborations. However, as we can observe in the plot below, the average Joe couldn't care less about their on-screen rendezvous. The frequency of actor co-starring doesn't impact their movie ratings. Hollywood, take note: chemistry doesn't always translate to critical acclaim, darling!
+These actors practically have each other on speed dial with their frequent collaborations. However, as we can observe in the plot below, the average Joe couldn't care less about their on-screen rendezvous. The frequency of actor co-starring doesn't impact their movie ratings. (+ de blabla technique?)
 
 ## Let's play celebrity chess !
-Get ready to play a round of celebrity chess as we unravel the patterns in Hollywood's grand game of actor collaboration networks. It's not just about moves on the board; it's a strategic dance of connections, rivalries, and who's stealing the spotlight on the chessboard. Let the games begin!
 
 2
 ### Time traveling in the movie industry
 4
 
-### It's gossip time : who's the power duo in Hollywood ?
+### 
 Our quest to unveil the secrets of successful actor clusters involved a battery of t-tests. We dissected everything from gender dynamics to how often these stars collabprated on set. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.
 
 
-The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned pros bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
+The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned actors bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
 
+Now that we've investigated the collaboration between actors, let's extend the scope of our story and add the collaborative networks of composers and scenarists.
+ 
 ### Spice it up : The return of celebrity chess with even more collaboration
 Adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network.
 
-As for composers, they're practically tied at the hip with one or a select few directors. In fact, in the plot there are a lot of two-node squads, starring a director and a composer, as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers, it is almost always a director that makes the bridge between clusters.
+As for composers, they're practically tied at the hip with one or a select few directors. In fact, in the plot there are a lot of two-node squads, starring a director and a composer, as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers, it is almost always a director that makes the bridge between clusters
 
 ## It's a bit more twisted than your average plot twist : internal factors
 
@@ -58,8 +51,21 @@ Two genres have a remarkable lower average rating than the rest: Softcore Porn a
 
 7, 5
 
-## Divining the future : it's crystal ball time
+## Divining the future : let's consult the crystal ball
 8
+
+Our initial exploration to predict the movie rating involved considering the following features defined in the context of pairs of actors that have played together in a movie:
+- Age difference
+- The difference in the number of movies they have played in
+- The number of movies they have played together in
+- Whether it was the first film for both actors or one of them
+- The main genre of movies played by the actors
+
+To unravel the cinematic enigma, we encoded the genre as a one-hot vector and scaled the numerical features. We then trained a linear regression model on the training set, corresponding of 80% of the data, and evaluated it on the test set. Alas, the model merely mustered an R2 score of 0.03 – a rather lackluster performance. Seeking further clarity, we subjected it to a 5-fold cross-validation, resulting in a mean R2 score of 0.01. The verdict? Predicting movie ratings with these specified features seems akin to reading an inscrutable crystal ball – not happening!
+
+Undeterred, we plunged into a second act, computing a rank ratio born from normalized movie ratings and revenues, and accounting for inflation's dramatic influence. Here, a rank ratio edging towards 1 signaled a successful actor duo. Success, in our script, equated to a rank ratio of 0.6 or higher. The cast of features mirrored the first act, with a notable exception – the exclusion of a boolean feature signaling an actor's cinematic debut due to its high correlation with its boolean counterpart. (lequel???)
+
+We trained a logistic regression model on the training set and evaluated it on the test set. The model achieved an accuracy of 0.78, coupled with a robust ROC-AUC of 0.82. To put our model in perspective, we concocted a baseline model that predictably leans toward the majority every time. It musters an accuracy of 0.58, and we can thus affirm that our model works well. Our crystal ball clears and the stage is set for success! 🌟🎥
 
 ## Ending credits
 
@@ -83,83 +89,3 @@ Two genres have a remarkable lower average rating than the rest: Softcore Porn a
 9. **In what ways does the inclusion of scenarists and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?**
 
 10. **How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?**
-
-Addressing these research questions will likely provide a comprehensive understanding of the collaborative dynamics in the film industry and offer practical insights for future filmmaking endeavors.
-
-# Proposed dataset
-[IMDb dataset](https://developer.imdb.com/non-commercial-datasets/): Used several datasets from IMDb to create a single dataset that is used to populate our own datasets with more information.
-* [IMDb title](https://datasets.imdbws.com/title.basics.tsv.gz): Contains the basic information of movies.
-* [IMDb crew](https://datasets.imdbws.com/title.crew.tsv.gz): Contains the directors and scenarists of movies.
-* [IMDb ratings](https://datasets.imdbws.com/title.ratings.tsv.gz): Contains the ratings of movies.
-* [IMDb name](https://datasets.imdbws.com/name.basics.tsv.gz): Contains the basic information of actors, directors and scenarists.
-* [IMDb principals](https://datasets.imdbws.com/title.principals.tsv.gz): Contains information of people involved in movies.
-
-# Methods
-### 1. Database manager
-Creation of the database and the population of the database with the data from the IMDb dataset.
-
-- Merging database: Merge the IMDb datasets into a single dataset that will be used to populate the database.
-- Cleaning data: Clean the data from the IMDb dataset to remove duplicates and to remove data that is not relevant to the project.
-
-### 2. Analysis
-Analysis of the data to answer the research questions using the CMU movie corpus.
-
-- Processing data: Process the data from the corpus.
-    - Character data: Analysis of the character dataset
-    - Movie data: Analysis of the movie dataset
-    - Revenue analysis around month of release: Categorize each movie into separate bins based on two criterias. Firstly, the first two genres they appear to belong to, and secondly, the month in which they were released. 
-
-- Merging all databases: Merge databases to start performing some analysis on success of a collaboration between actors.
-
-### 3. Transformation around data.
-- Inflation process: Adjust the revenue of each movie to the inflation of the year it was released in.
-- Creation of new features on the merged database: Creation of new features to help understand the evolution of actors individually.
-- Creation of a database of pairs of actors: Creation of a database of pairs of actors that have worked together in a movie.
-
-### 4. Actor network
-**Nodes**: they represent actors, the bigger a node is, the more the actor has made different collaborations. \
-**Edges**: they represent a collaboration between a pair of actors, the size of the edge represents the number of collaborations they have made
-
-### 5. Propensity score matching
-Propensity score matching to predict the revenue of the movie using a linear regression.
-
-# Proposed timeline
-**Before milestone 2: Define metrics and parameters**
-- Refine and finalize the success metrics for movies.
-- Determine parameters for measuring chemistry and collaboration success.
-- Identify specific criteria for categorizing successful collaborations.
-
-**Week 1: Construct collaborative networks**
-- Utilize the cleaned data to construct actor collaboration networks.
-- Establish links between actors, scenarists, and directors based on their collaborative history.
-- Apply network analysis techniques to identify central nodes and clusters.
-
-**Task 1: Genre-specific subnetworks**
-- Implement the granular approach by dividing the collaborative network into subnetworks based on movie genres.
-- Analyze and visualize genre-specific subnetworks.
-- Identify patterns and relationships within each genre.
-
-**Task 2: Analyze collaborative subgraphs**
-- Focus on collaborative subgraphs within each genre to determine their impact on successful movies.
-- Explore recurring partnerships and their influence on success.
-- Examine how external factors may affect specific subgraphs.
-
-**Task 3: Prepare the datastory website**
-- Explore the possibilities for a website using Jekyll
-- Prepare the layout of the website
-- Implement the analysis findings into the website
-
-**Week 4 : Finalize analysis and the datastory**
-- Synthesize findings from genre-specific analyses.
-- Draw conclusions and insights.
-- Review the prepared datastory and make changes if necessary.
-
-Week 1 and 4 will be done by all team members. Task 1, 2 and 3 will be done by different group members (2 people for Task 1, 2 people for Task 2, and 1 for Task 3), and should be finished by the end of week 3.
-
-# Organization within the team
-| Task   | Responsible |
-| :--- | :--- |
-| Task 1 | Adrien and Julien |
-| Task 2 | Elias and Kaan |
-| Task 3 | Keren |
-| Everythin else | Whole team |
