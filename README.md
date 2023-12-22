@@ -2,7 +2,7 @@
 
 **Team members**: [Adrien Vauthey](https://github.com/Lugiasc), [Kaan Uçar](https://github.com/Kaan-wq), [Elias Naha](https://github.com/Eliasepfl), [Keren Bensoussan](https://github.com/sdjfkjsh), [Julien Ars](https://github.com/merlebleue)
 
-**Data zip folder to drop in the project :** https://drive.google.com/file/d/1H5PKd_VSk6jRUzvEh8h3AlxLpLpTcbMr/view?usp=drive_link
+**Data zip folder to drop in the project :** https://drive.google.com/file/d/1srXuFEbbjiNY_yl7IUhbNPHQIcB1c5qM/view?usp=sharing
 
 **The main notebook is `main.ipynb`**
 
