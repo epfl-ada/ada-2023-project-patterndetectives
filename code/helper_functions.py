@@ -2,6 +2,16 @@ import pandas as pd
 import numpy as np
 
 def get_inflation(df: pd.DataFrame):
+    """
+    Calculates the inflation-adjusted revenue for movies in the year 2023.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing movie data.
+
+    Returns:
+        pd.DataFrame: DataFrame with additional columns for inflation factor and 2023 valued revenue.
+    """
+    
     columns_inf = ['year', 'amount','inflation rate']
     inflation = pd.read_table('../data/inflation_data.csv', header=None, names=columns_inf,sep=',')
     inflation = inflation.drop(index=0)
@@ -33,11 +43,29 @@ def get_inflation(df: pd.DataFrame):
     return df
 
 def round_down_to_nearest_05(number):
+    """
+    Rounds down a number to the nearest 0.05.
+
+    Args:
+        number (float): The number to be rounded down.
+
+    Returns:
+        float: The rounded down number.
+    """
     return np.floor(number / 0.05) * 0.05
 
-def interpolate_color(ratio,start_rgb,end_rgb):
+def interpolate_color(ratio, start_rgb, end_rgb):
+    """
+    Interpolates between two RGB colors based on a given ratio.
 
-    # Linearly interpolate each color component
+    Parameters:
+    ratio (float): The interpolation ratio between the start and end colors.
+    start_rgb (tuple): The RGB values of the start color.
+    end_rgb (tuple): The RGB values of the end color.
+
+    Returns:
+    tuple: The interpolated RGB values as a tuple.
+    """
     r = start_rgb[0] + (end_rgb[0] - start_rgb[0]) * ratio
     g = start_rgb[1] + (end_rgb[1] - start_rgb[1]) * ratio
     b = start_rgb[2] + (end_rgb[2] - start_rgb[2]) * ratio
@@ -46,21 +74,59 @@ def interpolate_color(ratio,start_rgb,end_rgb):
 
 # Function to transform x to y and create a tuple
 def transform(x):
+    """
+    Transforms a value based on a given condition.
+
+    If the input value is greater than or equal to 0.5, it interpolates the color between
+    (112, 85, 137) and (229, 83, 159) based on the value of x.
+    If the input value is less than 0.5, it interpolates the color between
+    (57, 35, 35) and (112, 85, 137) based on the absolute value of (x - 0.5).
+
+    Args:
+        x (float): The input value to be transformed.
+
+    Returns:
+        tuple: The interpolated RGB color value.
+
+    """
     if x >= 0.5:
-        start_rgb = (112,85,137)
+        start_rgb = (112, 85, 137)
         end_rgb = (229, 83, 159)
         y = (x - 0.5) * 2
-        return interpolate_color(y,start_rgb,end_rgb)
+        return interpolate_color(y, start_rgb, end_rgb)
     else:
         y = np.abs((x - 0.5) * 2)
-        start_rgb = (57,35,35)
-        end_rgb = (112,85,137)        
-        return interpolate_color(y,start_rgb,end_rgb)
+        start_rgb = (57, 35, 35)
+        end_rgb = (112, 85, 137)        
+        return interpolate_color(y, start_rgb, end_rgb)
+
     
 def rgb_to_hex(rgb):
+    """
+    Converts RGB color values to hexadecimal color code.
+
+    Parameters:
+    rgb (tuple): A tuple containing the RGB color values.
+
+    Returns:
+    str: The hexadecimal color code.
+
+    Example:
+    >>> rgb_to_hex((255, 0, 0))
+    '#ff0000'
+    """
     return '#{:02x}{:02x}{:02x}'.format(int(rgb[0]*255), int(rgb[1]*255), int(rgb[2]*255))
 
 # Function to compute average color
 def average_color(colors):
+    """
+    Calculates the average color from a list of colors.
+
+    Parameters:
+    colors (list): A list of RGB color values.
+
+    Returns:
+    str: The average color in hexadecimal format.
+    """
     avg = np.mean(colors, axis=0)
     return rgb_to_hex(avg)
