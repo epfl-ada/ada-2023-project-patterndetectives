@@ -10,7 +10,7 @@ body{
 }
 
 article {
-  margin-top:-200px;
+  margin-top:-200px !important;
   background-color: #f9f4e3;
   padding-top: 5%;
 
