@@ -1,55 +1,34 @@
-header{
-  background-image: url(pic/header.jpeg);
-  background-repeat: no-repeat;
-  background-size: 1500px 300px;
-  text-align: left;
-  color: white;
-  height: 250px;
-  padding: 0;
-}
-
 body{
+    text-align: left;
     font-family: 'Poppins', sans-serif;
     color: #392323;
     background-color: #f9f4e3;
-    margin-left: 10%;
-    margin-right: 10%;
   }
 
   .font-secondary {
     font-family: 'Lora', serif !important;
   }
 
-  .text-h2 {
-    font-size: 36px;
-    line-height: 52px;
-
-    @media (min-width: @screen-sm-min) {
-      font-size: 32px;
-      line-height: 48px;
-    }
+  article {
+    margin-top:-200px;
+    background-color: #f9f4e3;
+    padding-left : 10% !important;
+    padding-right : 10% !important;
+    padding-top : 10%;
   }
 
-  .text-h3 {
-    font-size: 32px;
-    line-height: 36px;
-    font-weight: 500;
-
-    @media (min-width: @screen-sm-min) {
-      font-size: 28px;
-      line-height: 32px;
-    }
+  h1 {
+    text-align: center;
+    margin-bottom: 5%;
   }
 
-  .text-body-1 {
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 32px;
+  h2, h3{
+    border-top : #39232377 1px solid;
+    padding-top : 2%;
+  }
 
-    @media (min-width: @screen-sm-min) {
-      font-size: 18px;
-      line-height: 28px;
-    }
+  p {
+    text-align: justify;
   }
 
   .text-body-2 {
