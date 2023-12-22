@@ -46,6 +46,8 @@ As you can see, there is no common ground between the two leaderboards. To bring
 - Rank percentile : Movies undergo a rating-based ranking, and to distinguish them within the same rating category, the movie boasting the highest revenue is deemed more successful, securing a superior rank. The rankings are subsequently normalized to obtain a rank percentile ranging between 0 and 1.
 - Actor score : the average of the rank percentile of the actor top 5 movies.
 
+Let's now try to compare the movies ranking and their actors score. We are making the hypothesis that some actors have an unobservable quality that would make their film successful.
+
 | Actor_name         |   Actor_score |
 |:-------------------|--------------:|
 | John Rhys-Davies   |      0.997549 |
@@ -104,11 +106,84 @@ This network also shows that prominent actors within major clusters frequently c
 
 #### For the network based on revenue ratings:
 
-<iframe src="graphs/revenue_network_1980_1995.html"></iframe>
-
-<iframe src="graphs/revenue_network_1980_2010.html"></iframe>
-
-<iframe src="graphs/revenue_network_1980_2023.html"></iframe>
+<div id="carouselRevenue" class="carousel slide" data-ride="true"> <!-- Revenue-->
+    <ol class="carousel-indicators">
+      <li data-target="#carouselRevenue" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselRevenue" data-slide-to="1"></li>
+      <li data-target="#carouselRevenue" data-slide-to="2"></li>
+      <li data-target="#carouselRevenue" data-slide-to="3"></li>
+      <li data-target="#carouselRevenue" data-slide-to="4"></li>
+      <li data-target="#carouselRevenue" data-slide-to="5"></li>
+      <li data-target="#carouselRevenue" data-slide-to="6"></li>
+      <li data-target="#carouselRevenue" data-slide-to="7"></li>
+      <li data-target="#carouselRevenue" data-slide-to="8"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" src="graphs/Network_png/1980_1985_rev.png" alt="1980-1985 revenue">
+        <div class="carousel-caption d-none d-md-block">
+        <h5>1980-1985</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
+      </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="graphs/Network_png/1980_1990_rev.png" alt="1980-1990 revenue">
+        <div class="carousel-caption d-none d-md-block">
+        <h5>1980-1990</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
+      </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="graphs/Network_png/1980_1995_rev.png" alt="1980-1995 revenue">
+        <div class="carousel-caption d-none d-md-block">
+        <h5>1980-1995</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
+      </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="graphs/Network_png/1980_2000_rev.png" alt="1980-2000 revenue">
+        <div class="carousel-caption d-none d-md-block">
+        <h5>1980-2000</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
+      </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="graphs/Network_png/1980_2005_rev.png" alt="1980-2005 revenue">
+        <div class="carousel-caption d-none d-md-block">
+        <h5>1980-2005</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
+      </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="graphs/Network_png/1980_2010_rev.png" alt="1980-2010 revenue">
+        <div class="carousel-caption d-none d-md-block">
+        <h5>1980-2010</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
+      </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="graphs/Network_png/1980_2015_rev.png" alt="1980-2015 revenue">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>1980-2015</h5>
+          <p>Colors indicate the success of the collaboration based on movie revenue</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="graphs/Network_png/1980_2020_rev.png" alt="1980-2020 revenue">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>1980-2020</h5>
+          <p>Colors indicate the success of the collaboration based on movie revenue</p>
+        </div>
+      </div>
+    <a class="carousel-control-prev" href="#carouselRevenue" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselRevenue" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
 
 The cluster formations in this network are largely similar to the first, but with notable differences in the color scheme employed. Larger clusters tend to exhibit pinker hues, suggesting higher profitability. Contrarily, large clusters with brown coloring are rare ; the brown coloring is mostly found among smaller groups with fewer actors. This pattern suggests a correlation between the length and success of an actor's career and their network's size: a broader network implies more varied collaborations, potentially leading to roles in higher-revenue films.
 
@@ -120,7 +195,7 @@ Our quest to unveil the secrets of successful actor clusters involved a battery 
 
 The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned actors bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
 
-<iframe src="graphs/bar_chart.html"></iframe>
+<iframe src="graphs/plot_q6.html"></iframe>
 
 ### Spice it up with even more collaboration
 
@@ -169,3 +244,4 @@ Our exploration to predict the movie rating considered the following features de
 To unravel the cinematic enigma, we computed a rank percentile born from normalized movie ratings and revenues and accounting for inflation's dramatic influence. Here, a rank percentile edging towards 1 signals a successful actor duo. We have considered a successful movie to be successful if its ranking was in the 40% more successful movies, which, in our script, equates to a rank percentile of 0.6 or higher. Using the cast of features above, we trained a logistic regression model on the training set (80% of the data) and evaluated it on the test set. Our crystal ball is ready and the stage is set for success! 🌟🎥
 
 ## Ending credits
+In summary, this work explores the intricate dynamics of successful collaborations in the American movie industry. From the interconnected web of actors, composers and directors to the influence of genres and the significance of age difference, the analysis unveils the multifaceted nature of success in this creative ecosystem. The study's findings underscore the importance of collaboration, genre diversity, and experienced actors in shaping the success of cinematic endeavors. As the curtain falls, the movie industry continues to weave its captivating narrative, driven by the harmonious interplay of talent, creativity, and strategic collaborations.
