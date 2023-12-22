@@ -15,6 +15,7 @@ AS we can see blablabla
 
 ## Tell me Johnny, who do you see often ?
 These actors practically have each other on speed dial with their frequent collaborations. However, as we can observe in the plot below, the average Joe couldn't care less about their on-screen rendezvous.
+
 <iframe src="graphs/average_rating_by_nb_films_together.html"></iframe>
 
 To confirm this data, using a linear regrassion model, R2 is equal to a measly 0.001, and thus the frequency of actor co-starring doesn't impact their movie ratings.
@@ -31,30 +32,41 @@ This is the legend of our graph :
 - Edges: These signify collaborations between pairs of actors. The thickness of an edge reflects the frequency of collaborations between the actors involved.
 - Color Scheme: This aspect denotes the success level of collaborations. Collaborations are then organized based on two criteria: rating and film revenue. The ranking determines the color of the edge, with higher ranks resulting in pinker edges and lower ranks leading to browner edges. For an actor (node), their color is a composite of the shades from all the edges (collaborations) they have participated in.
 
-
 For the First Network Based on Movie Ratings:
 
 <iframe src="graphs/rating_network_1980_1995.html"></iframe>
+
 <iframe src="graphs/rating_network_1980_2010.html"></iframe>
+
 <iframe src="graphs/rating_network_1980_2023.html"></iframe>
-In this network, it's evident that clusters of actors form rapidly. Actors who begin working together often continue to collaborate, leading to increasingly prominent connections within these groups. This phenomenon is clearly visible with the expansion of edges within clusters. Notably, smaller clusters, comprising fewer than four actors, generally exhibit lower performance. This could be attributed to successful actors gravitating towards larger, more established groups. Alternatively, a longitudinal view reveals a pattern where prominent actors within major clusters frequently collaborate with newcomers. This inclusion typically results in the newcomer gaining significant prominence within the cluster. These clusters often display similar colors, indicating a consistent level of success, likely because they originate from actors frequently cast in the same series or films. 
+
+In this network, it's evident that clusters of actors form rapidly. Actors who begin working together often continue to collaborate, leading to increasingly prominent connections within these groups. This phenomenon is clearly visible with the expansion of edges within clusters. Notably, smaller clusters, comprising fewer than four actors, generally exhibit lower performance. This could be attributed to successful actors gravitating towards larger, more established groups. 
+
+This network also shows that prominent actors within major clusters frequently collaborate with newcomers. These clusters often display similar colors, indicating a consistent level of success, likely because they originate from actors frequently cast in the same series or films. The newcomers, after their first movie, generally stay in the same cluster and thus in the same level of success.
 
 For the Network Based on Revenue Ratings:
+
 <iframe src="graphs/revenue_network_1980_1995.html"></iframe>
+
 <iframe src="graphs/revenue_network_1980_2010.html"></iframe>
+
 <iframe src="graphs/revenue_network_1980_2023.html"></iframe>
-The cluster formations in this network are largely similar to the first, but with notable differences in the color scheme employed. Larger clusters tend to exhibit greener hues, suggesting higher profitability. Contrarily, large clusters with brown coloring are rare and mostly found among smaller groups with fewer actors. This pattern suggests a correlation between the length and success of an actor's career and their network's size: a broader network implies more varied collaborations, potentially leading to roles in higher-grossing films.
+
+The cluster formations in this network are largely similar to the first, but with notable differences in the color scheme employed. Larger clusters tend to exhibit pinker hues, suggesting higher profitability. Contrarily, large clusters with brown coloring are rare ; the brown coloring is mostly found among smaller groups with fewer actors. This pattern suggests a correlation between the length and success of an actor's career and their network's size: a broader network implies more varied collaborations, potentially leading to roles in higher-revenue films.
 
 ### It's gossip time...
 Our quest to unveil the secrets of successful actor clusters involved a battery of t-tests. We dissected everything from gender dynamics to how often these stars collabprated on set. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.
 
-<iframe src="graphs/"></iframe>
+<iframe src="graphs/average_rating_by_age_difference.html"></iframe>
+
 The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned actors bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
-6
+MANQUE GRAPHE**
 
 ### Spice it up : The return of celebrity chess with even more collaboration
 Now that we've investigated the collaboration between actors, let's extend the scope of our story and add the collaborative networks of composers and scenarists. As you can see in the plot below, adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network.
+
 <iframe src="graphs/actors_directors_composers.html"></iframe>
+
 As for composers, they're practically tied at the hip with one or a select few directors. In fact, in the plot there are a lot of two-node squads, starring a director and a composer, as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers, it is almost always a director that makes the bridge between clusters.
 
 
