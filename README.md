@@ -6,6 +6,8 @@
 
 **The main notebook is `main.ipynb`**
 
+**The website is at :** https://epfl-ada.github.io/ada-2023-project-patterndetectives/
+
 # Table of contents
 - [Abstract](#abstract)
 - [Research questions](#research-questions)
