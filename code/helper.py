@@ -177,6 +177,106 @@ def modify_html(file_path, old_text, new_text, css, font_link, old_color_str, ne
     return
 
 
+# Function to start preprocesing the data
+def preprocess_data(df1):
+    df2 = df1.copy()
+
+
+    #Filter the years to have only the films from 1980 to 1985 first
+    df2 = df2[(df2['Movie_release'] >= 1980) & (df2['Movie_release'] <= 2020)]
+
+
+    # Step 1: Create a mapping DataFrame for 'Actor_pairs' to 'Actor1', 'Actor2', and 'Genre'
+    actor_pairs_mapping = df2[['Actor_pairs', 'Actor1', 'Actor2', 'Genre']].drop_duplicates()
+
+    # Step 2: Grouping by 'Actor_pairs' and calculating the required metrics along with including 'Genre'
+    grouped_df = df2.groupby('Actor_pairs').agg(
+        Average_Movie_revenue=pd.NamedAgg(column='2023 valued revenue', aggfunc='mean'),
+        Average_Movie_rating=pd.NamedAgg(column='Movie_rating', aggfunc='mean'),
+        Count=pd.NamedAgg(column='Movie_name', aggfunc='count')
+    )
+
+    # Reset index in the grouped DataFrame
+    grouped_df.reset_index(inplace=True)
+
+    # Step 3: Merge the aggregated DataFrame with the mapping DataFrame
+    # Note: The merge may result in multiple rows per actor pair if they have multiple genres.
+    final_df = pd.merge(grouped_df, actor_pairs_mapping, on='Actor_pairs')
+
+    return final_df
+
+
+# Function to create the ranking system
+def create_ranking_system(final_df):
+
+    # Filter to only keep real duos
+    duos = final_df[final_df['Count'] >=3]
+
+    # Creating a copy of the DataFrame slice
+    duos_standardized = duos.copy()
+
+    # Initialize the StandardScaler
+    standard_scaler = MinMaxScaler()
+
+    # Selecting the columns to be normalized
+    cols_to_normalize = ['Average_Movie_revenue', 'Average_Movie_rating']
+
+    # Applying normalization to the selected columns
+    duos_standardized[cols_to_normalize] = standard_scaler.fit_transform(duos_standardized[cols_to_normalize])
+
+    def round_down_to_nearest_05(number):
+        return np.floor(number / 0.05) * 0.05
+
+    duos_standardized['Average_Movie_revenue'] = duos_standardized['Average_Movie_revenue'].apply(round_down_to_nearest_05)
+
+
+    rating_stand = duos_standardized.sort_values(by=["Average_Movie_rating","Average_Movie_revenue"], ascending= False)
+
+
+    revenue_stand = duos_standardized.copy()
+    revenue_stand = duos_standardized.sort_values(by=["Average_Movie_revenue","Average_Movie_rating"], ascending= False)
+
+
+    rating_stand.reset_index(drop=True, inplace=True)
+    rating_stand['rank'] = rating_stand.index + 1   # Adding 1 to start the ranking from 1
+
+    revenue_stand.reset_index(drop=True, inplace=True)
+    revenue_stand['rank'] = revenue_stand.index + 1   # Adding 1 to start the ranking from 1
+
+
+    for i in range(1, len(rating_stand)):
+        # Check if the current row has the same speed and mass as the previous row
+        if (rating_stand.loc[i, 'Average_Movie_revenue'] == rating_stand.loc[i-1, 'Average_Movie_revenue']) and (rating_stand.loc[i, 'Average_Movie_rating'] == rating_stand.loc[i-1, 'Average_Movie_rating']):
+            # Update the rank to be the same as the previous row
+            rating_stand.loc[i, 'rank'] = rating_stand.loc[i-1, 'rank']
+        
+    for i in range(1, len(revenue_stand)):
+        # Check if the current row has the same speed and mass as the previous row
+        if (revenue_stand.loc[i, 'Average_Movie_revenue'] == revenue_stand.loc[i-1, 'Average_Movie_revenue']) and (revenue_stand.loc[i, 'Average_Movie_rating'] == rating_stand.loc[i-1, 'Average_Movie_rating']):
+            # Update the rank to be the same as the previous row
+            revenue_stand.loc[i, 'rank'] = revenue_stand.loc[i-1, 'rank']
+
+    length = len(rating_stand)
+
+    rating_stand['rank_ratio']  = (length - (rating_stand['rank']-1))/ length
+    revenue_stand['rank_ratio']  = (length - (revenue_stand['rank']-1))/ length
+
+    # Function to transform x to y and create a tuple
+    def transform(x):
+        if x >= 0.5:
+            y = (x - 0.5) * 2  
+            return (0, y, 0.3)
+        else:
+            y = np.abs((x - 0.5) * 2)
+            return (y, 0, 0.3)
+
+    # Apply the transformation
+    rating_stand['Color'] = rating_stand['rank_ratio'].apply(transform)
+    revenue_stand['Color'] = revenue_stand['rank_ratio'].apply(transform)
+
+    return rating_stand, revenue_stand
+
+
 """---------------------------------------------------------------Helper Functions for Q5 and Q6---------------------------------------------------------------------------------"""
 
 
