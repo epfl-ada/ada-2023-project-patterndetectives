@@ -130,3 +130,5 @@ Week 1 and 4 will be done by all team members. Task 1, 2 and 3 will be done by d
 | Task 2 | Elias and Kaan |
 | Task 3 | Keren |
 | Everythin else | Whole team |
+
+The collaboration plan was respected, everyone answered their question except for the last question which was deemed to hard.
