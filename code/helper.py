@@ -786,6 +786,9 @@ def create_plotly_bar_chart(cluster_averages, large_clusters, df1):
     bar_chart = go.Figure(data=[go.Bar(x=cluster_ids, y=average_age_differences, hovertext=hover_texts, name='Average Age Difference')])
     bar_chart.update_traces(hoverinfo='text', hoverlabel=dict(namelength=-1))
 
+    # Save the chart as an HTML file
+    bar_chart.write_html(file_name)
+
     return bar_chart
 
 """---------------------------------------------------------------Helper Functions for prediction---------------------------------------------------------------------------------"""
