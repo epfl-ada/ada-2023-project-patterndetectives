@@ -51,6 +51,7 @@ This project aims to delve into the intricate dynamics of successful collaborati
 
 10. **How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?**\
 => The researches for this question ended really deep, and we didn't find any relevant results so this question will be left unanswered.
+
 Addressing these research questions will likely provide a comprehensive understanding of the collaborative dynamics in the film industry and offer practical insights for future filmmaking endeavors.
 
 # Proposed dataset
