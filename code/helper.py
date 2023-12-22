@@ -251,9 +251,6 @@ def create_ranking_system(final_df):
     # Applying normalization to the selected columns
     duos_standardized[cols_to_normalize] = standard_scaler.fit_transform(duos_standardized[cols_to_normalize])
 
-    def round_down_to_nearest_05(number):
-        return np.floor(number / 0.05) * 0.05
-
     duos_standardized['Average_Movie_revenue'] = duos_standardized['Average_Movie_revenue'].apply(round_down_to_nearest_05)
 
 
@@ -287,15 +284,6 @@ def create_ranking_system(final_df):
 
     rating_stand['rank_ratio']  = (length - (rating_stand['rank']-1))/ length
     revenue_stand['rank_ratio']  = (length - (revenue_stand['rank']-1))/ length
-
-    # Function to transform x to y and create a tuple
-    def transform(x):
-        if x >= 0.5:
-            y = (x - 0.5) * 2  
-            return (0, y, 0.3)
-        else:
-            y = np.abs((x - 0.5) * 2)
-            return (y, 0, 0.3)
 
     # Apply the transformation
     rating_stand['Color'] = rating_stand['rank_ratio'].apply(transform)
