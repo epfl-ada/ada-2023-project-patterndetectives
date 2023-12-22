@@ -32,7 +32,7 @@ def get_inflation(df: pd.DataFrame):
     """
     
     columns_inf = ['year', 'amount','inflation rate']
-    inflation = pd.read_table('../data/inflation_data.csv', header=None, names=columns_inf,sep=',')
+    inflation = pd.read_table('./data/inflation_data.csv', header=None, names=columns_inf,sep=',')
     inflation = inflation.drop(index=0)
 
     #From https://www.officialdata.org/us/inflation/1888?amount=1
@@ -157,7 +157,22 @@ def average_color(colors):
 
 # Function to modify the networks to make them prettier
 def modify_html(file_path, old_text, new_text, css, font_link, old_color_str, new_color):
-    
+    """
+    Modifies an HTML file by replacing text, changing the loading bar color,
+    inserting Google Fonts link and custom CSS.
+
+    Args:
+        file_path (str): The path to the HTML file.
+        old_text (str): The text to be replaced.
+        new_text (str): The new text to replace the old text.
+        css (str): The custom CSS to be inserted.
+        font_link (str): The Google Fonts link to be inserted.
+        old_color_str (str): The old color string to be replaced.
+        new_color (str): The new color to replace the old color.
+
+    Returns:
+        None
+    """
     with open(file_path, 'r', encoding='iso-8859-1') as file:
         html_content = file.read()
 
@@ -168,23 +183,31 @@ def modify_html(file_path, old_text, new_text, css, font_link, old_color_str, ne
     new_color_str = f"background: {new_color};"
     modified_html = modified_html.replace(old_color_str, new_color_str)
 
-     # Insert the Google Fonts link and custom CSS
+    # Insert the Google Fonts link and custom CSS
     head_content = f"{font_link}<style>{css}</style>"
     modified_html = modified_html.replace('</head>', f'{head_content}</head>')
 
     with open(file_path, 'w', encoding='iso-8859-1') as file:
-         file.write(modified_html)
+        file.write(modified_html)
     return
 
 
 # Function to start preprocesing the data
 def preprocess_data(df1):
-    df2 = df1.copy()
+    """
+    Preprocesses the input DataFrame by filtering the years, grouping by actor pairs, and calculating metrics.
 
+    Args:
+        df1 (pandas.DataFrame): The input DataFrame containing movie data.
+
+    Returns:
+        pandas.DataFrame: The preprocessed DataFrame with aggregated metrics.
+
+    """
+    df2 = df1.copy()
 
     #Filter the years to have only the films from 1980 to 1985 first
     df2 = df2[(df2['Movie_release'] >= 1980) & (df2['Movie_release'] <= 2020)]
-
 
     # Step 1: Create a mapping DataFrame for 'Actor_pairs' to 'Actor1', 'Actor2', and 'Genre'
     actor_pairs_mapping = df2[['Actor_pairs', 'Actor1', 'Actor2', 'Genre']].drop_duplicates()
@@ -206,6 +229,16 @@ def preprocess_data(df1):
     return final_df
 
 def preprocess_data_directors_composers(df1):
+    """
+    Preprocesses the input DataFrame by filtering the years, grouping by actor, directors, composers pairs, and calculating metrics.
+
+    Args:
+        df1 (pandas.DataFrame): The input DataFrame containing movie data.
+
+    Returns:
+        pandas.DataFrame: The preprocessed DataFrame with aggregated metrics.
+
+    """
     df2 = df1.copy()
 
 
@@ -235,7 +268,16 @@ def preprocess_data_directors_composers(df1):
 
 # Function to create the ranking system
 def create_ranking_system(final_df):
+    """
+    Create a ranking system based on movie revenue and rating for duos in a DataFrame.
 
+    Parameters:
+    final_df (DataFrame): The input DataFrame containing movie data.
+
+    Returns:
+    rating_stand (DataFrame): DataFrame with ranking based on movie rating.
+    revenue_stand (DataFrame): DataFrame with ranking based on movie revenue.
+    """
     # Filter to only keep real duos
     duos = final_df[final_df['Count'] >=3]
 
@@ -297,6 +339,15 @@ def create_ranking_system(final_df):
 
 """Function to create the ranking based on the average movie revenue and rating"""
 def get_rating_stand(df1):
+    """
+    Calculate the standardized rating and ranking for actor pairs based on movie revenue and rating.
+
+    Parameters:
+    df1 (pandas.DataFrame): The input DataFrame containing movie data.
+
+    Returns:
+    pandas.DataFrame: The DataFrame with standardized rating and ranking for actor pairs.
+    """
     # Filter years to include only films from 1980 to 2020
     df2 = df1[(df1['Movie_release'] >= 1980) & (df1['Movie_release'] <= 2020)]
 
@@ -345,6 +396,19 @@ def get_rating_stand(df1):
 
 # Function to create the genre distribution for each cluster based on movies
 def process_clusters_and_genres(df, large_clusters, rating_stand):
+    """
+    Process clusters and genres based on the given dataframe, large_clusters, and rating_stand.
+
+    Args:
+        df (pandas.DataFrame): The dataframe containing actor and movie information.
+        large_clusters (dict): A dictionary of cluster IDs and corresponding actors.
+        rating_stand (pandas.DataFrame): The dataframe containing actor ratings.
+
+    Returns:
+        dict: A dictionary containing information about each cluster, including movie genre counts,
+              total movie count, and average rank.
+
+    """
     actor_movies = df.groupby('Actor_name')['Movie_name'].apply(set)
     movie_genres = df.drop_duplicates('Movie_name').set_index('Movie_name')['Main_genre']
     cluster_info = defaultdict(lambda: {'movie_genre_counts': defaultdict(int), 'total_movie_count': 0, 'average_rank': 0})
@@ -393,6 +457,15 @@ def process_clusters_and_genres(df, large_clusters, rating_stand):
 
 # Function to create the plots for movies
 def create_and_display_plots(cluster_info):
+    """
+    Creates and displays bar and pie charts based on the given cluster information.
+
+    Parameters:
+    cluster_info (dict): A dictionary containing information about clusters, including average ranks and movie genre counts.
+
+    Returns:
+    None
+    """
     sorted_cluster_ids = sorted(cluster_info, key=lambda x: cluster_info[x]['average_rank'] or float('inf'))
     cluster_ids = [f"Cluster {cluster_id}" for cluster_id in sorted_cluster_ids]
     average_ranks = [round(cluster_info[cluster_id]['average_rank']) for cluster_id in sorted_cluster_ids]
@@ -424,6 +497,15 @@ def create_and_display_plots(cluster_info):
 
 # Function to perform the statistical tests for movies
 def perform_t_tests(cluster_info):
+    """
+    Perform t-tests for each genre in the cluster_info.
+
+    Args:
+        cluster_info (dict): A dictionary containing information about each cluster.
+
+    Returns:
+        list: A list of tuples containing the genre, t-statistic, and p-value for each t-test.
+    """
     t_test_results = []
     all_genres = set()
     for info in cluster_info.values():
@@ -457,6 +539,17 @@ def perform_t_tests(cluster_info):
 
 # Function to create the genre distribution for each cluster based on actors
 def process_cluster_genre_counts(df, large_clusters, rating_stand):
+    """
+    Process the genre counts and average rank for each cluster in the given dataframe and cluster information.
+
+    Args:
+        df (pandas.DataFrame): The dataframe containing actor information.
+        large_clusters (dict): A dictionary mapping cluster IDs to a list of actor nodes in each cluster.
+        rating_stand (pandas.DataFrame): The dataframe containing actor ratings and rankings.
+
+    Returns:
+        dict: A dictionary containing the genre counts, total genre count, and average rank for each cluster.
+    """
     cluster_info = defaultdict(lambda: {'genre_counts': defaultdict(int), 'total_genre_count': 0, 'average_rank': 0})
 
     for cluster_id, nodes in large_clusters.items():
@@ -485,6 +578,15 @@ def process_cluster_genre_counts(df, large_clusters, rating_stand):
 
 # Function to create the plots for actors
 def create_interactive_plots(cluster_info):
+    """
+    Creates interactive plots for cluster information.
+
+    Args:
+        cluster_info (dict): A dictionary containing cluster information.
+
+    Returns:
+        None
+    """
     sorted_cluster_ids = sorted(cluster_info, key=lambda x: cluster_info[x]['average_rank'])
     cluster_ids = [f"Cluster {cluster_id}" for cluster_id in sorted_cluster_ids]
     average_ranks = [round(cluster_info[cluster_id]['average_rank']) for cluster_id in sorted_cluster_ids]
@@ -511,6 +613,15 @@ def create_interactive_plots(cluster_info):
 
 # Function to perform the statistical tests for actors
 def perform_genre_t_tests(cluster_info):
+    """
+    Perform t-tests for each genre in the given cluster information.
+
+    Args:
+        cluster_info (dict): A dictionary containing information about each cluster.
+
+    Returns:
+        list: A list of tuples containing the genre, t-statistic, and p-value for each t-test.
+    """
     t_test_results = []
     all_genres = set()
     for info in cluster_info.values():
@@ -543,6 +654,15 @@ def perform_genre_t_tests(cluster_info):
 
 # Function to create the clusters in the graph
 def analyze_and_print_clusters(rating_stand):
+    """
+    Analyzes clusters in a graph and prints the results.
+
+    Args:
+        rating_stand (DataFrame): A DataFrame containing the graph data.
+
+    Returns:
+        dict: A dictionary containing the clusters with more than 5 nodes.
+    """
     # Create a NetworkX graph from the DataFrame
     G = nx.from_pandas_edgelist(rating_stand, 'Actor1', 'Actor2', ['Count'])
 
@@ -578,10 +698,22 @@ def analyze_and_print_clusters(rating_stand):
         print(f"  Actors: {info['actors']}")
         print()
 
-    return large_clusters, cluster_averages
+    return large_clusters
 
 
 def perform_characteristic_t_tests(df1, cluster_averages, characteristics):
+    """
+    Perform T-tests to compare the average values of characteristics between high-rank clusters and low-rank clusters.
+
+    Parameters:
+    - df1 (DataFrame): The DataFrame containing the data.
+    - cluster_averages (dict): A dictionary containing the average rank and actors for each cluster.
+    - characteristics (list): A list of characteristics to perform T-tests on.
+
+    Returns:
+    - t_test_results (list): A list of tuples containing the characteristic, T-statistic, and P-value for each T-test.
+
+    """
     # Function to calculate the average of a characteristic for a cluster
     def calculate_average_for_cluster(cluster, df, characteristic):
         cluster_rows = df[(df['Actor1'].isin(cluster)) | (df['Actor2'].isin(cluster))]
@@ -617,6 +749,18 @@ def perform_characteristic_t_tests(df1, cluster_averages, characteristics):
 
 # Function to create the bar chart for the average age difference without dash-app
 def create_plotly_bar_chart(cluster_averages, large_clusters, df1):
+    """
+    Creates a Plotly bar chart showing the average age difference for each cluster.
+
+    Args:
+        cluster_averages (dict): A dictionary containing the average rank and other information for each cluster.
+        large_clusters (dict): A dictionary mapping cluster IDs to the list of actors in each cluster.
+        df1 (pandas.DataFrame): The DataFrame containing the data.
+
+    Returns:
+        plotly.graph_objects.Figure: The Plotly bar chart.
+    """
+
     # Function to calculate the average of a characteristic for a cluster
     def calculate_average_for_cluster(cluster, df, characteristic):
         cluster_rows = df[(df['Actor1'].isin(cluster)) | (df['Actor2'].isin(cluster))]
@@ -643,3 +787,61 @@ def create_plotly_bar_chart(cluster_averages, large_clusters, df1):
     bar_chart.update_traces(hoverinfo='text', hoverlabel=dict(namelength=-1))
 
     return bar_chart
+
+"""---------------------------------------------------------------Helper Functions for prediction---------------------------------------------------------------------------------"""
+
+def get_rating_stand_with_more_features(df1):
+    """
+    Calculate the standardized rating and ranking for actor pairs based on movie revenue and rating. Sole difference with previous function is that we retain more features.
+
+    Parameters:
+    df1 (pandas.DataFrame): The input DataFrame containing movie data.
+
+    Returns:
+    pandas.DataFrame: The DataFrame with standardized rating and ranking for actor pairs.
+    """ 
+
+    # Filter years to include only films from 1980 to 2020
+    df2 = df1[(df1['Movie_release'] >= 1980) & (df1['Movie_release'] <= 2020)]
+
+    # Step 1: Mapping DataFrame for 'Actor_pairs' to 'Actor1', 'Actor2', and 'Genre'
+    actor_pairs_mapping = df2[['Actor_pairs', 'Actor1', 'Actor2', 'Genre', 'Age_difference', 'Film_count_difference', 'Average_revenue_difference', 'First_film', 'First_film_for_one', 'Number_of_films_together']].drop_duplicates()
+
+    # Step 2: Grouping by 'Actor_pairs' and calculating metrics
+    grouped_df = df2.groupby('Actor_pairs').agg(
+        Average_Movie_revenue=pd.NamedAgg(column='Movie_revenue', aggfunc='mean'),
+        Average_Movie_rating=pd.NamedAgg(column='Movie_rating', aggfunc='mean'),
+        Count=pd.NamedAgg(column='Movie_name', aggfunc='count')
+    ).reset_index()
+
+    # Step 3: Merging aggregated DataFrame with the mapping DataFrame
+    final_df = pd.merge(grouped_df, actor_pairs_mapping, on='Actor_pairs')
+
+    # Filter to only keep real duos
+    duos = final_df[final_df['Count'] >= 3]
+
+    # Standardizing
+    duos_standardized = duos.copy()
+    standard_scaler = MinMaxScaler()
+    cols_to_normalize = ['Average_Movie_revenue', 'Average_Movie_rating']
+    duos_standardized[cols_to_normalize] = standard_scaler.fit_transform(duos_standardized[cols_to_normalize])
+
+    # Round down the revenue
+    duos_standardized['Average_Movie_revenue'] = duos_standardized['Average_Movie_revenue'].apply(lambda x: np.floor(x / 0.05) * 0.05)
+
+    # Sort and rank
+    rating_stand = duos_standardized.sort_values(by=["Average_Movie_rating", "Average_Movie_revenue"], ascending=False)
+    rating_stand.reset_index(drop=True, inplace=True)
+    rating_stand['rank'] = rating_stand.index + 1
+
+    # Adjusting ranks for ties
+    for i in range(1, len(rating_stand)):
+        if (rating_stand.loc[i, 'Average_Movie_revenue'] == rating_stand.loc[i - 1, 'Average_Movie_revenue']) and (rating_stand.loc[i, 'Average_Movie_rating'] == rating_stand.loc[i - 1, 'Average_Movie_rating']):
+            rating_stand.loc[i, 'rank'] = rating_stand.loc[i - 1, 'rank']
+
+    # Rank ratio and color transformation
+    length = len(rating_stand)
+    rating_stand['rank_ratio'] = (length - (rating_stand['rank'] - 1)) / length
+    rating_stand['Color'] = rating_stand['rank_ratio'].apply(lambda x: (0, (x - 0.5) * 2, 0.3) if x >= 0.5 else (np.abs((x - 0.5) * 2), 0, 0.3))
+
+    return rating_stand
