@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import itertools
+import networkx as nx
+import community as community_louvain
 from collections import defaultdict
 from tqdm import tqdm
 import plotly.graph_objs as go
@@ -10,6 +12,9 @@ from IPython.display import display
 from statistics import median
 import scipy.stats as stats
 import math
+import dash
+from dash import dcc, html
+import plotly.graph_objs as go
 
 """Function to create the ranking based on the average movie revenue and rating"""
 def get_rating_stand(df1):
@@ -255,3 +260,107 @@ def perform_genre_t_tests(cluster_info):
         print()
 
     return t_test_results
+
+
+# Function to create the clusters in the graph
+def analyze_and_print_clusters(rating_stand):
+    # Create a NetworkX graph from the DataFrame
+    G = nx.from_pandas_edgelist(rating_stand, 'Actor1', 'Actor2', ['Count'])
+
+    # Detect communities using the Louvain method
+    partition = community_louvain.best_partition(G, weight='weight')
+
+    # Group nodes by their cluster
+    clusters = defaultdict(list)
+    for node, cluster_id in partition.items():
+        clusters[cluster_id].append(node)
+
+    # Filter clusters with more than 5 nodes
+    large_clusters = {k: v for k, v in clusters.items() if len(v) > 5}
+
+    # Analysis for each large cluster
+    cluster_averages = {
+        cluster_id: {
+            'actors': nodes,
+            'average_rank': rating_stand[
+                (rating_stand['Actor1'].isin(nodes)) | (rating_stand['Actor2'].isin(nodes))
+            ]['rank'].mean() if not rating_stand.empty else None
+        }
+        for cluster_id, nodes in large_clusters.items()
+    }
+
+    # Sort clusters by average rank in ascending order
+    sorted_cluster_averages = dict(sorted(cluster_averages.items(), key=lambda item: item[1]['average_rank']))
+
+    # Print the cluster analysis results
+    for cluster_id, info in sorted_cluster_averages.items():
+        print(f"Cluster {cluster_id}:")
+        print(f"  Average Rank: {info['average_rank']}")
+        print(f"  Actors: {info['actors']}")
+        print()
+
+    return large_clusters, cluster_averages
+
+
+def perform_characteristic_t_tests(df1, cluster_averages, characteristics):
+    # Function to calculate the average of a characteristic for a cluster
+    def calculate_average_for_cluster(cluster, df, characteristic):
+        cluster_rows = df[(df['Actor1'].isin(cluster)) | (df['Actor2'].isin(cluster))]
+        return cluster_rows[characteristic].mean()
+
+    # Group clusters based on their average rank
+    median_rank = np.median([info['average_rank'] for info in cluster_averages.values()])
+    high_rank_clusters = [info['actors'] for info in cluster_averages.values() if info['average_rank'] > median_rank]
+    low_rank_clusters = [info['actors'] for info in cluster_averages.values() if info['average_rank'] <= median_rank]
+
+    # Initialize a list to store T-test results
+    t_test_results = []
+
+    # Perform T-tests for each characteristic
+    for characteristic in characteristics:
+        high_rank_averages = [calculate_average_for_cluster(cluster, df1, characteristic) for cluster in high_rank_clusters]
+        low_rank_averages = [calculate_average_for_cluster(cluster, df1, characteristic) for cluster in low_rank_clusters]
+
+        # Perform a T-test
+        t_stat, p_value = stats.ttest_ind(high_rank_averages, low_rank_averages, nan_policy='omit')
+
+        # Store the result
+        t_test_results.append((characteristic, t_stat, p_value))
+
+    # Print the T-test results for each characteristic
+    for characteristic, t_stat, p_value in t_test_results:
+        print(f"Characteristic: {characteristic}")
+        print(f"  T-statistic: {t_stat}, P-value: {p_value}")
+        print()
+
+    return t_test_results
+
+
+# Function to create the bar chart for the average age difference without dash-app
+def create_plotly_bar_chart(cluster_averages, large_clusters, df1):
+    # Function to calculate the average of a characteristic for a cluster
+    def calculate_average_for_cluster(cluster, df, characteristic):
+        cluster_rows = df[(df['Actor1'].isin(cluster)) | (df['Actor2'].isin(cluster))]
+        return cluster_rows[characteristic].mean()
+
+    # Prepare data for the bar chart
+    sorted_cluster_ids = sorted(cluster_averages, key=lambda x: cluster_averages[x]['average_rank'] or float('inf'))
+    cluster_ids = [f"Cluster {cluster_id}" for cluster_id in sorted_cluster_ids]
+    average_age_differences = []
+    hover_texts = []
+
+    for cluster_id in tqdm(sorted_cluster_ids, desc="Calculating average age differences"):
+        # Calculate average age difference for each cluster
+        age_diff = calculate_average_for_cluster(large_clusters[cluster_id], df1, 'Age_difference')
+        average_age_differences.append(age_diff if age_diff is not None else 0)
+
+        # Prepare hover text
+        rank_info = f"Rank: {round(cluster_averages[cluster_id]['average_rank'])}"
+        age_diff_info = f"Average Age Difference: {age_diff:.2f} years" if age_diff is not None else "Data missing"
+        hover_texts.append(f"{cluster_ids[sorted_cluster_ids.index(cluster_id)]} - {rank_info} - {age_diff_info}")
+
+    # Create the bar chart with hover text
+    bar_chart = go.Figure(data=[go.Bar(x=cluster_ids, y=average_age_differences, hovertext=hover_texts, name='Average Age Difference')])
+    bar_chart.update_traces(hoverinfo='text', hoverlabel=dict(namelength=-1))
+
+    return bar_chart
