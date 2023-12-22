@@ -4,12 +4,13 @@ The movie industry, often considered the pinnacle of modern storytelling, is a c
 
 At its core, the movie industry is a multifaceted ecosystem, comprising filmmakers, actors, writers, directors, producers, and numerous other creative minds. Each individual contributes unique talents to craft compelling stories. The collaborative nature of filmmaking fosters a delicate dance of ideas and visions, resulting in the creation of cinematic masterpieces that resonate with audiences on emotional, intellectual, and even spiritual levels. The relationships formed within the movie industry are as diverse as the stories it tells. Collaboration and synergy are at the heart of its success, with artists and technicians working in harmony to bring visions to life.
 
-In this exploration of the movie industry, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, scenarists, and directors. Brace yourself for a web network that connects the dots between actors, scenarists, and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
+In this exploration of the movie industry, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, composers, and directors. Brace yourself for a web network that connects the dots between actors, composers, and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
 
 ## I don't like people, sorry
 If you want to reduce the number of actors in your movie, unfortunately, that depends on your scenario. You can even have one actor playing all the roles ! However, in order to ensure its success, let's see which specific individual you should cast.
 
 table:Average movie revenue of their best 5 movies (10 best actors)
+
 | Actor_name       |   Average movie revenue (2023 valued) |
 |:-----------------|--------------------------------------:|
 | Jim MacDonald    |                         2,795,528,720 |
@@ -24,6 +25,8 @@ table:Average movie revenue of their best 5 movies (10 best actors)
 | George Reeves    |                         1,882,126,750 |
 
 table:Average movie rating of their best 5 movies (10 best actors)
+
+
 | Actor_name       |   Average movie rating |
 |:-----------------|-----------------------:|
 | Abe Vigoda       |                   9.20 |
@@ -37,10 +40,34 @@ table:Average movie rating of their best 5 movies (10 best actors)
 | Liam Neeson      |                   9.00 |
 | Elijah Wood      |                   9.00 |
 
+
 As you can see, there is no common ground between the two leaderboards. To bring some clarity, let's introduce a few metrics:
 
 - Rank percentile : Movies undergo a rating-based ranking, and to distinguish them within the same rating category, the movie boasting the highest revenue is deemed more successful, securing a superior rank. The rankings are subsequently normalized to obtain a rank percentile ranging between 0 and 1.
 - Actor score : the average of the rank percentile of the actor top 5 movies.
+
+| Actor_name         |   Actor_score |
+|:-------------------|--------------:|
+| John Rhys-Davies   |      0.997549 |
+| Andy Serkis        |      0.996397 |
+| Michael Caine      |      0.992806 |
+| Tom Hanks          |      0.992635 |
+| Christian Bale     |      0.992003 |
+| Morgan Freeman     |      0.991843 |
+| Robert De Niro     |      0.990278 |
+| Al Pacino          |      0.989189 |
+| Robert Duvall      |      0.989137 |
+| Samuel L. Jackson  |      0.988728 |
+| Elijah Wood        |      0.987437 |
+| Harry Dean Stanton |      0.987391 |
+| Charlie Chaplin    |      0.986355 |
+| Leonardo DiCaprio  |      0.98557  |
+| James Stewart      |      0.983631 |
+| Orlando Bloom      |      0.983156 |
+| Joe Pesci          |      0.983145 |
+| Gary Oldman        |      0.982974 |
+| Alfred Hitchcock   |      0.98147  |
+| R. Lee Ermey       |      0.981269 |
 
 **Pas fini**
 
@@ -107,7 +134,7 @@ The accompanying plot organizes clusters based on their average ranks, with the 
 **MANQUE GRAPHE**
 
 ### Spice it up with even more collaboration
-Now that we've investigated the collaboration between actors, let's extend the scope of our story and add the collaborative networks of composers and scenarists. As you can see in the plot below, adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network.
+Now that we've investigated the collaboration between actors, let's extend the scope of our story and add the collaborative networks of composers. As you can see in the plot below, adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network.
 
 <iframe src="graphs/actors_directors_composers.html"></iframe>
 
