@@ -32,7 +32,7 @@ def get_inflation(df: pd.DataFrame):
     """
     
     columns_inf = ['year', 'amount','inflation rate']
-    inflation = pd.read_table('../data/inflation_data.csv', header=None, names=columns_inf,sep=',')
+    inflation = pd.read_table('./data/inflation_data.csv', header=None, names=columns_inf,sep=',')
     inflation = inflation.drop(index=0)
 
     #From https://www.officialdata.org/us/inflation/1888?amount=1
@@ -578,7 +578,7 @@ def analyze_and_print_clusters(rating_stand):
         print(f"  Actors: {info['actors']}")
         print()
 
-    return large_clusters, cluster_averages
+    return large_clusters
 
 
 def perform_characteristic_t_tests(df1, cluster_averages, characteristics):
@@ -643,3 +643,51 @@ def create_plotly_bar_chart(cluster_averages, large_clusters, df1):
     bar_chart.update_traces(hoverinfo='text', hoverlabel=dict(namelength=-1))
 
     return bar_chart
+
+"""---------------------------------------------------------------Helper Functions for prediction---------------------------------------------------------------------------------"""
+
+def get_rating_stand_with_more_features(df1):
+    # Filter years to include only films from 1980 to 2020
+    df2 = df1[(df1['Movie_release'] >= 1980) & (df1['Movie_release'] <= 2020)]
+
+    # Step 1: Mapping DataFrame for 'Actor_pairs' to 'Actor1', 'Actor2', and 'Genre'
+    actor_pairs_mapping = df2[['Actor_pairs', 'Actor1', 'Actor2', 'Genre', 'Age_difference', 'Film_count_difference', 'Average_revenue_difference', 'First_film', 'First_film_for_one', 'Number_of_films_together']].drop_duplicates()
+
+    # Step 2: Grouping by 'Actor_pairs' and calculating metrics
+    grouped_df = df2.groupby('Actor_pairs').agg(
+        Average_Movie_revenue=pd.NamedAgg(column='Movie_revenue', aggfunc='mean'),
+        Average_Movie_rating=pd.NamedAgg(column='Movie_rating', aggfunc='mean'),
+        Count=pd.NamedAgg(column='Movie_name', aggfunc='count')
+    ).reset_index()
+
+    # Step 3: Merging aggregated DataFrame with the mapping DataFrame
+    final_df = pd.merge(grouped_df, actor_pairs_mapping, on='Actor_pairs')
+
+    # Filter to only keep real duos
+    duos = final_df[final_df['Count'] >= 3]
+
+    # Standardizing
+    duos_standardized = duos.copy()
+    standard_scaler = MinMaxScaler()
+    cols_to_normalize = ['Average_Movie_revenue', 'Average_Movie_rating']
+    duos_standardized[cols_to_normalize] = standard_scaler.fit_transform(duos_standardized[cols_to_normalize])
+
+    # Round down the revenue
+    duos_standardized['Average_Movie_revenue'] = duos_standardized['Average_Movie_revenue'].apply(lambda x: np.floor(x / 0.05) * 0.05)
+
+    # Sort and rank
+    rating_stand = duos_standardized.sort_values(by=["Average_Movie_rating", "Average_Movie_revenue"], ascending=False)
+    rating_stand.reset_index(drop=True, inplace=True)
+    rating_stand['rank'] = rating_stand.index + 1
+
+    # Adjusting ranks for ties
+    for i in range(1, len(rating_stand)):
+        if (rating_stand.loc[i, 'Average_Movie_revenue'] == rating_stand.loc[i - 1, 'Average_Movie_revenue']) and (rating_stand.loc[i, 'Average_Movie_rating'] == rating_stand.loc[i - 1, 'Average_Movie_rating']):
+            rating_stand.loc[i, 'rank'] = rating_stand.loc[i - 1, 'rank']
+
+    # Rank ratio and color transformation
+    length = len(rating_stand)
+    rating_stand['rank_ratio'] = (length - (rating_stand['rank'] - 1)) / length
+    rating_stand['Color'] = rating_stand['rank_ratio'].apply(lambda x: (0, (x - 0.5) * 2, 0.3) if x >= 0.5 else (np.abs((x - 0.5) * 2), 0, 0.3))
+
+    return rating_stand
