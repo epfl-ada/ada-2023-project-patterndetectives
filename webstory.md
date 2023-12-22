@@ -7,6 +7,7 @@ At its core, the movie industry is a multifaceted ecosystem, comprising filmmake
 In this exploration of the movie industry, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, composers and directors. Brace yourself for a web network that connects the dots between actors, composers and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
 
 ## I don't like people, sorry
+
 If you want to reduce the number of actors in your movie, unfortunately, that depends on your scenario. You can even have one actor playing all the roles ! However, in order to ensure its success, let's see which specific individual you should cast.
 
 table:Average movie revenue of their best 5 movies (10 best actors)
