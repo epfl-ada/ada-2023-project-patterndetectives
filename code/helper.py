@@ -32,7 +32,7 @@ def get_inflation(df: pd.DataFrame):
     """
     
     columns_inf = ['year', 'amount','inflation rate']
-    inflation = pd.read_table('data/inflation_data.csv', header=None, names=columns_inf,sep=',')
+    inflation = pd.read_table('../data/inflation_data.csv', header=None, names=columns_inf,sep=',')
     inflation = inflation.drop(index=0)
 
     #From https://www.officialdata.org/us/inflation/1888?amount=1
