@@ -202,8 +202,10 @@
 </tr>
 </tbody>
 </table>
-<p>Now, we wonder how many movies does a successful actor make on average ? <iframe src="graphs/number_of_movie_for_successful_actor.html"></iframe> Thus successful actors have a longer career with more movies</p>
-<p>Do individual actors make a movie more successful? <iframe src="graphs/success_of_movies.html"></iframe> As we can observe, it seems that successful actors make a movie more successful. However a t test is needed to confirm. <strong>Pas fini</strong></p>
+<p>But should you really get those actors in particular to make your movie a great movie ? Do those actors really make a movie more successful?</p>
+<iframe src="graphs/success_of_movies.html">
+</iframe>
+<p>Oh, the plot thickens! It appears on the plot above that when successful actors step into the scene, they sprinkle a dash of success on the movies they touch, so you should definitely get succesful actors for your film ! But filmmaking is about collaboration, so what if they collaborate ?</p>
 <h2 id="tell-me-johnny-who-do-you-see-often">Tell me Johnny, who do you see often ?</h2>
 <p>These actors practically have each other on speed dial with their frequent collaborations. However, as we can observe in the plot below, the average Joe couldn’t care less about their on-screen rendezvous.</p>
 <iframe src="graphs/average_rating_by_nb_films_together.html">
@@ -252,61 +254,93 @@
 </li>
 </ol>
 <div class="carousel-inner">
-<pre><code>&lt;div class=&quot;carousel-item active&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_1985_rev.png&quot; alt=&quot;1980-1985 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-1985&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;carousel-item&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_1990_rev.png&quot; alt=&quot;1980-1990 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-1990&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;carousel-item&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_1995_rev.png&quot; alt=&quot;1980-1995 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-1995&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;carousel-item&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_2000_rev.png&quot; alt=&quot;1980-2000 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-2000&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;carousel-item&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_2005_rev.png&quot; alt=&quot;1980-2005 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-2005&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;carousel-item&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_2010_rev.png&quot; alt=&quot;1980-2010 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-2010&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;carousel-item&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_2015_rev.png&quot; alt=&quot;1980-2015 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-2015&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&quot;carousel-item&quot;&gt;
-  &lt;img class=&quot;d-block w-100&quot; src=&quot;graphs/Network_png/1980_2020_rev.png&quot; alt=&quot;1980-2020 revenue&quot;&gt;
-  &lt;div class=&quot;carousel-caption d-none d-md-block&quot;&gt;
-    &lt;h5&gt;1980-2020&lt;/h5&gt;
-    &lt;p&gt;Colors indicate the success of the collaboration based on movie revenue&lt;/p&gt;
-&lt;/div&gt;</code></pre>
+<div class="carousel-item active">
+<img class="d-block w-100" src="graphs/Network_png/1980_1985_rev.png" alt="1980-1985 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-1985
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
+</div>
+<div class="carousel-item">
+<img class="d-block w-100" src="graphs/Network_png/1980_1990_rev.png" alt="1980-1990 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-1990
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
+</div>
+<div class="carousel-item">
+<img class="d-block w-100" src="graphs/Network_png/1980_1995_rev.png" alt="1980-1995 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-1995
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
+</div>
+<div class="carousel-item">
+<img class="d-block w-100" src="graphs/Network_png/1980_2000_rev.png" alt="1980-2000 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-2000
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
+</div>
+<div class="carousel-item">
+<img class="d-block w-100" src="graphs/Network_png/1980_2005_rev.png" alt="1980-2005 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-2005
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
+</div>
+<div class="carousel-item">
+<img class="d-block w-100" src="graphs/Network_png/1980_2010_rev.png" alt="1980-2010 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-2010
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
+</div>
+<div class="carousel-item">
+<img class="d-block w-100" src="graphs/Network_png/1980_2015_rev.png" alt="1980-2015 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-2015
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
+</div>
+<div class="carousel-item">
+<img class="d-block w-100" src="graphs/Network_png/1980_2020_rev.png" alt="1980-2020 revenue">
+<div class="carousel-caption d-none d-md-block">
+<h5>
+1980-2020
+</h5>
+<p>
+Colors indicate the success of the collaboration based on movie revenue
+</p>
+</div>
 </div>
 <p><a class="carousel-control-prev" href="#carouselRevenue" role="button" data-slide="prev"> <span class="carousel-control-prev-icon" aria-hidden="true"></span> <span class="sr-only">Previous</span> </a> <a class="carousel-control-next" href="#carouselRevenue" role="button" data-slide="next"> <span class="carousel-control-next-icon" aria-hidden="true"></span> <span class="sr-only">Next</span> </a></p>
 </div>
@@ -331,19 +365,7 @@
 <p>Expanding this statistical investigation to the movie genre ratios revealed another setback for crime-fiction, once again yielding a p-value under 0.05. The consistency in results emphasizes the genre’s impact on cluster rankings. However, the study brought forth a fascinating contrast with genres like “fantasy” and “fantasy adventure,” where the p-values were less than 0.05. Unlike crime fiction, these genres seemed to sprinkle a bit of magic dust, giving clusters a boost in rankings.</p>
 <p>The significant correlation between the prevalence of crime-fiction and lower cluster rankings suggests that clusters heavily inclined towards this genre might encounter specific challenges. This could be attributed to the demanding nature of crime-fiction narratives, needing performances so intense they could rival a Shakespearean tragedy – not everyone’s cup of cinematic tea. Focusing too much on this genre could restrict the versatility and appeal of the cluster’s collective filmography.</p>
 <p>Conversely, the positive correlation observed with fantasy and fantasy adventure genres suggests a different dynamic.Think imaginative storytelling and visual spectacle – a recipe for a diverse and engaging portfolio. It’s like adding different spices to your cooking; suddenly, you’ve got a feast that everyone wants a bite of. More diverse, more appealing, potentially leading to those high cluster rankings.</p>
-<p>These patterns aren’t just about the actors preferences; they’re a strategic play shaping the cluster’s success. The study indicates that a balanced and diverse genre portfolio within a cluster may be more conducive to achieving higher rankings, possibly due to broader audience appeal and increased opportunities for showcasing a range of acting skills and storylines. This insight holds value for actors and industry professionals in forming collaborative groups and selecting projects, diversifying genres isn’t merely a passing trend; it’s the secret sauce for crafting successful career trajectories. <!-- Pas clair
-### ?
-
-
-We observe that for each figure, the average movie rating for the biggest category is around 6.45.
-
-Both the age and film count difference has high variability when the difference is big due to the small number of movies. Otherwise it averages around 6.5 pretty consistently.
-
-Whether it is the first film for one of the actors or for both does not have a significant impact on the average rating. The difference in average rating is around 0.1 in both cases.
-
-When looking at the number of films a pair of actors have done together, we observe a small increase in the average rating up to 5 films. After that, the average rating decreases slightly and no particular trend emerges.
-
-Two genres have a remarkable lower average rating than the rest: Softcore Porn and Space opera with 2.4 and 2.5 respectively. On the contrary, some genres neighbour the 8.0 average rating mark: Anti-war, Culture & Society, Film à clef, Tragedy and Reboot. The latter contains only three movies, thus it is less interesting. For the other, we have a least 50 movies per genre. Hence, these genres seem to be the most appreciated by the users. --></p>
+<p>These patterns aren’t just about the actors preferences; they’re a strategic play shaping the cluster’s success. The study indicates that a balanced and diverse genre portfolio within a cluster may be more conducive to achieving higher rankings, possibly due to broader audience appeal and increased opportunities for showcasing a range of acting skills and storylines. This insight holds value for actors and industry professionals in forming collaborative groups and selecting projects, diversifying genres isn’t merely a passing trend; it’s the secret sauce for crafting successful career trajectories.</p>
 <h2 id="divining-the-future-ask-the-crystal-ball">Divining the future : ask the crystal ball</h2>
 <p>Our exploration to predict the movie rating considered the following features defined in the context of pairs of actors that have played together in a movie: - Age difference - The difference in the number of movies they have played in - The number of movies they have played together in - The main genre of movies played by the actors</p>
 <p>To unravel the cinematic enigma, we computed a rank percentile born from normalized movie ratings and revenues and accounting for inflation’s dramatic influence. Here, a rank percentile edging towards 1 signals a successful actor duo. We have considered a successful movie to be successful if its ranking was in the 40% more successful movies, which, in our script, equates to a rank percentile of 0.6 or higher. Using the cast of features above, we trained a logistic regression model on the training set (80% of the data) and evaluated it on the test set. Our crystal ball is ready and the stage is set for success! 🌟🎥</p>
