@@ -10,6 +10,10 @@ In this exploration of the movie industry, we will delve into the intricate rela
 
 In the ever-evolving realm of filmmaking, success is often attributed to the synergy between actors, scenarists, and directors. Our project seeks to unravel the intricate dynamics of this collaboration, going beyond traditional success metrics. By constructing comprehensive actor collaboration networks, we aim to explore the chemistry that arises from frequent co-starring and its impact on the success of movies. Our approach involves the creation of a web network that interconnects actors, scenarists, and directors, using the data from **CMU Movie Summary Corpus**.
 
+___
+
+In the ever-evolving world of filmmaking, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, scenarists, and directors. Forget the usual success metrics – we're crafting comprehensive actor collaboration networks to find out the chemistry born from frequent co-starring. Brace yourself for a web network extravaganza that connects the dots between actors, scenarists, and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight on the real MVPs behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
+
 ## I don't like people, sorry
 If you want to reduce the number of actors in your movie, unfortunately, that depends on your scenario. You can even have one actor playing all the roles ! However, in order to ensure its success, let's see which specific individual you should cast.
 
