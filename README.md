@@ -17,27 +17,40 @@
 # Abstract
 This project aims to delve into the intricate dynamics of successful collaboration in the film industry, extending beyond conventional success metrics to explore the chemistry between actors through frequent co-starring. The approach involves constructing actor collaboration networks, interconnecting actors, scenarists, and directors within a comprehensive web network. Employing a granular methodology, the web network is subdivided based on movie genres, allowing for the analysis of collaborative subgraphs. The focus is on identifying patterns and relationships that contribute to the success of movies within each genre. This research not only provides insights into individual performances but also offers an understanding of collaborative networks. By incorporating diverse talents and considering genre-specific nuances, the project aims to yield valuable insights for future filmmaking collaborations, potentially influencing industry practices and enhancing the likelihood of successful movie projects. The use of network analysis tools adds a visual dimension, aiding in the interpretation of the complex web of collaborations in the film industry.
 
-# Research questions
-1. **How does the frequency of actor co-starring impact the chemistry and success of collaborative films?**
+# Research questions, replaced in the order of the data story 
+## First chapter : individual impact and frequency
 
-2. **What patterns emerge when constructing and analyzing actor collaboration networks, and how do these patterns differ across various movie genres?**
+1. **To what extent does the involvement of specific individuals (actors, scenarists, directors) contribute to the overall success of a collaborative project?**\
+=> This question has been done and answered by Julien and Keren
+2. **How does the frequency of actor co-starring impact the chemistry and success of collaborative films?** \
+=> This question has been done and answered by Julien and Keren
 
-3. **To what extent does the involvement of specific individuals (actors, scenarists, directors) contribute to the overall success of a collaborative project?**
+## Second chapter : Collaboration, Alchemy and Networks
 
-4. **How does the collaborative network evolve over time, and are there recurring partnerships or clusters of individuals within the film industry?**
+3. **What patterns emerge when constructing and analyzing actor collaboration networks, and how do these patterns differ across various movie genres?**\
+=> This question has been merged with the question 6 because of similarity and is partially answered there
 
-5. **What role does genre play in shaping collaborative dynamics, and how do successful collaborations differ across genres?**
+4. **How does the collaborative network evolve over time, and are there recurring partnerships or clusters of individuals within the film industry?**\
+=> This question has been done and answered
 
-6. **Are there specific collaborative subgraphs within the network that consistently yield successful movies, and what are the characteristics of these subgraphs?**
+5. **Are there specific collaborative subgraphs within the network that consistently yield successful movies, and what are the characteristics of these subgraphs?**\
+=> This question has been done and answered\
 
-7. **How do factors such as creative differences, interpersonal relationships, and previous collaborative experiences impact the success of film projects within the identified networks?**
+6. **In what ways does the inclusion of composers and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?**
 
-8. **Can the identified patterns and insights be applied to predict the potential success of future collaborative projects in the film industry?**
+## Third chapter : Cluster characteristics and success predictions
 
-9. **In what ways does the inclusion of composers and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?**
+7. **How do factors such as creative differences, interpersonal relationships, and previous collaborative experiences impact the success of film projects within the identified networks?**\
+=> This question has been done and answered
 
-10. **How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?**
+8. **What role does genre play in shaping collaborative dynamics, and how do successful collaborations differ across genres?**\
+=> This question has been done and answered
 
+9. **Can the identified patterns and insights be applied to predict the potential success of future collaborative projects in the film industry?**\
+=> This question has been done and answered
+
+10. **How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?**\
+=> The researches for this question ended really deep, and we didn't find any relevant results so this question will be left unanswered.
 Addressing these research questions will likely provide a comprehensive understanding of the collaborative dynamics in the film industry and offer practical insights for future filmmaking endeavors.
 
 # Proposed dataset
