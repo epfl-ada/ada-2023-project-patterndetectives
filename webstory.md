@@ -88,15 +88,20 @@ The cluster formations in this network are largely similar to the first, but wit
 ### It's gossip time : Why do actors go well together?
 Our quest to unveil the secrets of successful actor clusters involved a battery of t-tests. We dissected everything from gender dynamics to how often these stars collaborated on set. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.
 
-<iframe height=200 src="graphs/average_rating_by_age_difference.html"> class=".col-md-4"</iframe>
+<iframe height="200" src="graphs/average_rating_by_age_difference.html" class="col-md-4">
+</iframe>
 
-<iframe height=200 src="graphs/average_rating_by_film_difference.html"> class=".col-md-4"</iframe>
+<iframe height=200 src="graphs/average_rating_by_film_difference.html" class="col-md-4">
+</iframe>
 
-<iframe height=200 src="graphs/average_rating_by_first_film_bool.html"> class=".col-md-4"</iframe>
+<iframe height=200 src="graphs/average_rating_by_first_film_bool.html" class="col-md-4">
+</iframe>
 
-<iframe height=200 src="graphs/average_rating_by_genre.html"> class=".col-md-4"</iframe>
+<iframe height=200 src="graphs/average_rating_by_genre.html" class="col-md-4">
+</iframe>
 
-<iframe height=200 src="graphs/average_rating_by_first_nb_films_together.html"> class=".col-md-4"</iframe>
+<iframe height=200 src="graphs/average_rating_by_first_nb_films_together.html" class="col-md-4">
+</iframe>
 
 The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned actors bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
 **MANQUE GRAPHE**
