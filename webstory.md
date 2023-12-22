@@ -31,14 +31,32 @@ Get ready to play a round of celebrity chess as we unravel the patterns in Holly
 
 ### It's gossip time : who goes well together?
 6
+In our investigation to identify the key traits of successful actor clusters, we employed a series of t-tests to assess various attributes within our dataset, including gender disparity, the frequency of film collaborations between actor pairs, and several other factors. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.
+
+
+The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. It is important to emphasize that a lower average rank signifies greater success. The plot reveals a discernible trend: clusters with lower ranks tend to exhibit a marginally higher age disparity, suggesting a broader age range among members of these clusters. This variation in age could be indicative of the beneficial impact of seasoned actors, who potentially contribute greater experience and knowledge to the ensemble.
+
 ### Spice it up : The return of celebrity chess with even more collaboration
-9
+Adding directors and composers do not lead to a significant change in the collaborative network. As some well known directors are also actors, they are already part of the network. For composers, they are highly tied to one or a few directors. It is expected as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers we find that it is almost always a director that make the bridge between clusters. There a lot of 2 nodes clusters composed of one director and one composer, which agrees with what we said before.
+
 ## It's a bit more twisted than your average plot twist : internal factors
+
+We observe that for each figure, the average movie rating for the biggest category is around 6.45.
+
+Both the age and film count difference has high variability when the difference is big due to the small number of movies. Otherwise it averages around 6.5 pretty consistently.
+
+Whether it is the first film for one of the actors or for both does not have a significant impact on the average rating. The difference in average rating is around 0.1 in both cases.
+
+When looking at the number of films a pair of actors have done together, we observe a small increase in the average rating up to 5 films. After that, the average rating decreases slightly and no particular trend emerges.
+
+Two genres have a remarkable lower average rating than the rest: Softcore Porn and Space opera with 2.4 and 2.5 respectively. On the contrary, some genres neighbour the 8.0 average rating mark: Anti-war, Culture & Society, Film à clef, Tragedy and Reboot. The latter contains only three movies, thus it is less interesting. For the other, we have a least 50 movies per genre. Hence, these genres seem to be the most appreciated by the users.
+
 7, 5
 ## What's life without even more complications : external factors
 10
 ## Divining the future : it's crystal ball time
 8
+
 ## Ending credits
 
 # Research questions
