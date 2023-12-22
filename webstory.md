@@ -131,7 +131,8 @@ Our quest to unveil the secrets of successful actor clusters involved a battery 
 </iframe>
 
 The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned actors bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
-**MANQUE GRAPHE**
+
+<iframe src="graphs/bar_chart.html"></iframe>
 
 ### Spice it up with even more collaboration
 Now that we've investigated the collaboration between actors, let's extend the scope of our story and add the collaborative networks of composers. As you can see in the plot below, adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network.
