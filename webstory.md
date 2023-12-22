@@ -4,7 +4,7 @@ The movie industry, often considered the pinnacle of modern storytelling, is a c
 
 At its core, the movie industry is a multifaceted ecosystem, comprising filmmakers, actors, writers, directors, producers, and numerous other creative minds. Each individual contributes unique talents to craft compelling stories. The collaborative nature of filmmaking fosters a delicate dance of ideas and visions, resulting in the creation of cinematic masterpieces that resonate with audiences on emotional, intellectual, and even spiritual levels. The relationships formed within the movie industry are as diverse as the stories it tells. Collaboration and synergy are at the heart of its success, with artists and technicians working in harmony to bring visions to life.
 
-In this exploration of the movie industry, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, composers, and directors. Brace yourself for a web network that connects the dots between actors, composers, and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
+In this exploration of the movie industry, where success is the elusive golden ticket, we're diving headfirst into the dynamics between actors, composers and directors. Brace yourself for a web network that connects the dots between actors, composers and directors, courtesy of the **CMU Movie Summary Corpus** data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It's time to turn the spotlight behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫
 
 ## I don't like people, sorry
 If you want to reduce the number of actors in your movie, unfortunately, that depends on your scenario. You can even have one actor playing all the roles ! However, in order to ensure its success, let's see which specific individual you should cast.
@@ -78,7 +78,7 @@ These actors practically have each other on speed dial with their frequent colla
 
 To confirm this data, using a linear regrassion model, R2 is equal to a measly 0.001, and thus the frequency of actor co-starring doesn't impact their movie ratings.
 
-## ?
+## When playing solo isn't the answer
 ### Collaborative network building blocks : Time traveling in the movie industry
 Only collaborations occurring at least three times will be featured in the analysis. This criterion is based on the rationale that in the movie industry, a partnership isn't typically recognized as a significant "duo" if they have only collaborated once or twice. The focus is on observing the development of these collaborations over time and how they form clusters, reflecting either successful or less favorable outcomes. Initially, our network will encompass films released from 1980 to 1995. Subsequently, we will extend the timeline up to 2010, and finally, we will consider a broad range from 1980 to 2023, resulting in a more intricate network.
 
@@ -113,28 +113,17 @@ This network also shows that prominent actors within major clusters frequently c
 The cluster formations in this network are largely similar to the first, but with notable differences in the color scheme employed. Larger clusters tend to exhibit pinker hues, suggesting higher profitability. Contrarily, large clusters with brown coloring are rare ; the brown coloring is mostly found among smaller groups with fewer actors. This pattern suggests a correlation between the length and success of an actor's career and their network's size: a broader network implies more varied collaborations, potentially leading to roles in higher-revenue films.
 
 ### It's gossip time : Why do actors go well together?
+
 Our quest to unveil the secrets of successful actor clusters involved a battery of t-tests. We dissected everything from gender dynamics to how often these stars collaborated on set. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.
 
-<iframe height="200" src="graphs/average_rating_by_age_difference.html" class="col-md-4">
-</iframe>
-
-<iframe height=200 src="graphs/average_rating_by_film_difference.html" class="col-md-4">
-</iframe>
-
-<iframe height=200 src="graphs/average_rating_by_first_film_bool.html" class="col-md-4">
-</iframe>
-
-<iframe height=200 src="graphs/average_rating_by_genre.html" class="col-md-4">
-</iframe>
-
-<iframe height=200 src="graphs/average_rating_by_first_nb_films_together.html" class="col-md-4">
-</iframe>
+<iframe src="graphs/average_rating_by_age_difference.html"></iframe>
 
 The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned actors bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
 
 <iframe src="graphs/bar_chart.html"></iframe>
 
 ### Spice it up with even more collaboration
+
 Now that we've investigated the collaboration between actors, let's extend the scope of our story and add the collaborative networks of composers. As you can see in the plot below, adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network.
 
 <iframe src="graphs/actors_directors_composers.html"></iframe>
@@ -142,7 +131,7 @@ Now that we've investigated the collaboration between actors, let's extend the s
 As for composers, they're practically tied at the hip with one or a select few directors. In fact, in the plot there are a lot of two-node squads, starring a director and a composer, as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers, it is almost always a director that makes the bridge between clusters.
 
 ## It's a bit more twisted than your average plot twist
-### Genre investigation
+
 In our primary analysis, we systematically calculated the ratios of movie genres within each cluster, based on the films in which actors within the cluster participated. This method generated a comprehensive genre profile for each cluster. In contrast, our secondary analysis took a different approach, focusing on the main genres associated with the individual actors. This method offered a personalized genre representation for each cluster. Upon initial scrutiny of both datasets, a direct correlation between specific genres and the ranks of the clusters was not immediately evident.
 
 <iframe src="graphs/genre_distribution.html"></iframe>
@@ -156,10 +145,8 @@ The significant correlation between the prevalence of crime-fiction and lower cl
 Conversely, the positive correlation observed with fantasy and fantasy adventure genres suggests a different dynamic.Think imaginative storytelling and visual spectacle – a recipe for a diverse and engaging portfolio. It's like adding different spices to your cooking; suddenly, you've got a feast that everyone wants a bite of. More diverse, more appealing, potentially leading to those high cluster rankings.
 
 These patterns aren't just about the actors preferences; they're a strategic play shaping the cluster's success. The study indicates that a balanced and diverse genre portfolio within a cluster may be more conducive to achieving higher rankings, possibly due to broader audience appeal and increased opportunities for showcasing a range of acting skills and storylines. This insight holds value for actors and industry professionals in forming collaborative groups and selecting projects, diversifying genres isn't merely a passing trend; it's the secret sauce for crafting successful career trajectories.
-
-### ?
-
 <!-- Pas clair
+### ?
 
 
 We observe that for each figure, the average movie rating for the biggest category is around 6.45.
@@ -171,8 +158,6 @@ Whether it is the first film for one of the actors or for both does not have a s
 When looking at the number of films a pair of actors have done together, we observe a small increase in the average rating up to 5 films. After that, the average rating decreases slightly and no particular trend emerges.
 
 Two genres have a remarkable lower average rating than the rest: Softcore Porn and Space opera with 2.4 and 2.5 respectively. On the contrary, some genres neighbour the 8.0 average rating mark: Anti-war, Culture & Society, Film à clef, Tragedy and Reboot. The latter contains only three movies, thus it is less interesting. For the other, we have a least 50 movies per genre. Hence, these genres seem to be the most appreciated by the users. -->
-
-7, 5
 
 ## Divining the future : ask the crystal ball
 Our exploration to predict the movie rating considered the following features defined in the context of pairs of actors that have played together in a movie:
