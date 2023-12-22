@@ -21,27 +21,28 @@ To confirm this data, using a linear regrassion model, R2 is equal to a measly 0
 
 ## Let's play celebrity chess !
 ### Time traveling in the movie industry
-4
-
 We have decided that only collaborations occurring at least three times will be featured in our analysis. This criterion is based on the rationale that in the movie industry, a partnership isn't typically recognized as a significant "duo" if they have only collaborated once or twice. Our focus is on observing the development of these collaborations over time and how they form clusters, reflecting either successful or less favorable outcomes. Initially, our network will encompass films released from 1980 to 1995. Subsequently, we will extend the timeline up to 2010, and finally, we will consider a broad range from 1980 to 2023, resulting in a more intricate network.
 
 The collaborations are assessed using two primary ranking criteria. The first method ranks duos based on the average rating of their joint projects. In cases where ratings are identical, the average revenue is used as a secondary factor to differentiate the ranks. Duos with the same values in both criteria will receive the same rank. The second method prioritizes ranking based on revenue, followed by average ratings. The duo's position in these rankings will be indicative of their performance level and will influence their representation in the network graph.
 
 This is the legend of our graph : 
 
-Nodes: These symbolize the actors. The size of a node correlates with the number of unique collaborations an actor has engaged in.
-
-Edges: These signify collaborations between pairs of actors. The thickness of an edge reflects the frequency of collaborations between the actors involved.
-
-Color Scheme: This aspect denotes the success level of collaborations. Collaborations are then organized based on two criteria: rating and film revenue. The ranking determines the color of the edge, with higher ranks resulting in pinker edges and lower ranks leading to browner edges. For an actor (node), their color is a composite of the shades from all the edges (collaborations) they have participated in.
+- Nodes: These symbolize the actors. The size of a node correlates with the number of unique collaborations an actor has engaged in.
+- Edges: These signify collaborations between pairs of actors. The thickness of an edge reflects the frequency of collaborations between the actors involved.
+- Color Scheme: This aspect denotes the success level of collaborations. Collaborations are then organized based on two criteria: rating and film revenue. The ranking determines the color of the edge, with higher ranks resulting in pinker edges and lower ranks leading to browner edges. For an actor (node), their color is a composite of the shades from all the edges (collaborations) they have participated in.
 
 
 For the First Network Based on Movie Ratings:
 
+<iframe src="graphs/rating_network_1980_1995.html"></iframe>
+<iframe src="graphs/rating_network_1980_2010.html"></iframe>
+<iframe src="graphs/rating_network_1980_2023.html"></iframe>
 In this network, it's evident that clusters of actors form rapidly. Actors who begin working together often continue to collaborate, leading to increasingly prominent connections within these groups. This phenomenon is clearly visible with the expansion of edges within clusters. Notably, smaller clusters, comprising fewer than four actors, generally exhibit lower performance. This could be attributed to successful actors gravitating towards larger, more established groups. Alternatively, a longitudinal view reveals a pattern where prominent actors within major clusters frequently collaborate with newcomers. This inclusion typically results in the newcomer gaining significant prominence within the cluster. These clusters often display similar colors, indicating a consistent level of success, likely because they originate from actors frequently cast in the same series or films. 
 
 For the Network Based on Revenue Ratings:
-
+<iframe src="graphs/revenue_network_1980_1995.html"></iframe>
+<iframe src="graphs/revenue_network_1980_2010.html"></iframe>
+<iframe src="graphs/revenue_network_1980_2023.html"></iframe>
 The cluster formations in this network are largely similar to the first, but with notable differences in the color scheme employed. Larger clusters tend to exhibit greener hues, suggesting higher profitability. Contrarily, large clusters with brown coloring are rare and mostly found among smaller groups with fewer actors. This pattern suggests a correlation between the length and success of an actor's career and their network's size: a broader network implies more varied collaborations, potentially leading to roles in higher-grossing films.
 
 ### It's gossip time...
@@ -53,13 +54,15 @@ The accompanying plot organizes clusters based on their average ranks, with the 
 
 ### Spice it up : The return of celebrity chess with even more collaboration
 Now that we've investigated the collaboration between actors, let's extend the scope of our story and add the collaborative networks of composers and scenarists. As you can see in the plot below, adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network.
-
+<iframe src="graphs/actors_directors_composers.html"></iframe>
 As for composers, they're practically tied at the hip with one or a select few directors. In fact, in the plot there are a lot of two-node squads, starring a director and a composer, as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers, it is almost always a director that makes the bridge between clusters.
 
 
 ## It's a bit more twisted than your average plot twist
 ### Genre investigation
 In our first analysis, we meticulously calculated the ratios of movie genres for each cluster, basing our calculations on the films in which actors within the cluster participated. This approach provided a collective genre profile for each cluster. Conversely, our second analysis adopted a different perspective, focusing on the main genres associated with the actors themselves. This method offered an individualistic genre representation of each cluster. Upon initial inspection of both datasets, there wasn't an immediately discernible correlation between specific genres and the clusters' ranks.
+
+<iframe src="graphs/genre_distribution.html"></iframe>
 
 The analysis took a compelling turn when we applied T-tests to each genre across the clusters. A significant finding emerged from this statistical examination, particularly with the crime-fiction genre. When analyzed in the context of the actors' main genres, crime-fiction yielded a p-value below 0.05, indicating a statistically significant association. Delving deeper into this discovery, especially concentrating on the crime-fiction genre, revealed a notable pattern: an increased prevalence of this genre corresponded with lower cluster rankings, suggesting a potential inverse relationship.
 
@@ -85,8 +88,6 @@ Two genres have a remarkable lower average rating than the rest: Softcore Porn a
 7, 5
 
 ## Divining the future : let's consult the crystal ball
-8
-
 Our exploration to predict the movie rating considered the following features defined in the context of pairs of actors that have played together in a movie:
 - Age difference
 - The difference in the number of movies they have played in
@@ -99,8 +100,6 @@ To unravel the cinematic enigma, we computed a rank percentile born from normali
 
 # Research questions
 1. **How does the frequency of actor co-starring impact the chemistry and success of collaborative films?**
-
-2. **What patterns emerge when constructing and analyzing actor collaboration networks?**
 
 3. **To what extent does the involvement of specific individuals (actors, scenarists, directors) contribute to the overall success of a collaborative project?**
 
@@ -115,5 +114,3 @@ To unravel the cinematic enigma, we computed a rank percentile born from normali
 8. **Can the identified patterns and insights be applied to predict the potential success of future collaborative projects in the film industry?**
 
 9. **In what ways does the inclusion of scenarists and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?**
-
-10. **How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?**
