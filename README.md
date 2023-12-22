@@ -136,6 +136,6 @@ The collaboration plan was respected, everyone answered their question except fo
 
 - Elias Naha: Worked on some of the data analysis, implemented the inital code for the creation of the network, created the dataframe of movies, answered questions 4 and 5.
 
-- Keren Bensoussan: Worked on the website, answered question 1 and 2 with Julien and wrote the datastory based on the answers of the other members of the group.
+- Keren Bensoussan: Worked a little on the website but mostly wrote the datastory based on the answers of the other members of the group and answered question 1 and 2 with Julien.
 
-- Julien Ars: Worked on the website, answered question 1 and 2 with Keren and wrote the datastory based on the answers of the other members of the group.
+- Julien Ars: Worked on the website answered question 1 and 2 with Keren and wrote a little of the datastory based on the answers of the other members of the group.
