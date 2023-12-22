@@ -34,7 +34,7 @@ This project aims to delve into the intricate dynamics of successful collaborati
 
 8. **Can the identified patterns and insights be applied to predict the potential success of future collaborative projects in the film industry?**
 
-9. **In what ways does the inclusion of scenarists and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?**
+9. **In what ways does the inclusion of composers and directors in the collaborative network influence the overall success of a film, and are there notable differences in the impact of each role?**
 
 10. **How do external factors, such as cultural trends or industry shifts, influence the dynamics of collaboration and the success of films within the identified networks?**
 
