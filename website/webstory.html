@@ -4,18 +4,34 @@
 <p>In this exploration of the movie industry, we will delve into the intricate relationships formed both on and off the screen, beyond traditional success metrics. From the creative collaborations that birth cinematic wonders to the societal impact that transcends the theater walls, join us on a journey through the enchanting world where imagination meets reality : the world of the movie industry.</p>
 <p>–</p>
 <p>In the ever-evolving realm of filmmaking, success is often attributed to the synergy between actors, scenarists, and directors. Our project seeks to unravel the intricate dynamics of this collaboration, going beyond traditional success metrics. By constructing comprehensive actor collaboration networks, we aim to explore the chemistry that arises from frequent co-starring and its impact on the success of movies. Our approach involves the creation of a web network that interconnects actors, scenarists, and directors, using the data from <strong>CMU Movie Summary Corpus</strong>.</p>
+<hr />
+<p>In the ever-evolving world of filmmaking, where success is the elusive golden ticket, we’re diving headfirst into the dynamics between actors, scenarists, and directors. Forget the usual success metrics – we’re crafting comprehensive actor collaboration networks to find out the chemistry born from frequent co-starring. Brace yourself for a web network extravaganza that connects the dots between actors, scenarists, and directors, courtesy of the <strong>CMU Movie Summary Corpus</strong> data. Get ready to unravel the intrigue, and discover how these Hollywood connections play a role in the make-it-or-break-it game of movie success. It’s time to turn the spotlight on the real MVPs behind the scenes, where imagination meets reality, and the movie industry takes center stage. Let the show begin! 🎬💫</p>
 <h2 id="i-dont-like-people-sorry">I don’t like people, sorry</h2>
 <p>If you want to reduce the number of actors in your movie, unfortunately, that depends on your scenario. You can even have one actor playing all the roles ! However, in order to ensure its success, let’s see which specific individual you should cast.</p>
 <p>graph</p>
 <p>AS we can see blablabla</p>
 <p>–</p>
 <h2 id="tell-me-johnny-who-do-you-see-often">Tell me Johnny, who do you see often ?</h2>
-<p>These actors practically have each other on speed dial with their frequent collaborations.</p>
+<p>These actors practically have each other on speed dial with their frequent collaborations. However, as we can observe in the plot below, the average Joe couldn’t care less about their on-screen rendezvous. The frequency of actor co-starring doesn’t impact their movie ratings. Hollywood, take note: chemistry doesn’t always translate to critical acclaim, darling!</p>
 <h2 id="lets-play-celebrity-chess">Let’s play celebrity chess !</h2>
 <p>Get ready to play a round of celebrity chess as we unravel the patterns in Hollywood’s grand game of actor collaboration networks. It’s not just about moves on the board; it’s a strategic dance of connections, rivalries, and who’s stealing the spotlight on the chessboard. Let the games begin!</p>
 <p>2 ### Time traveling in the movie industry 4</p>
-<h3 id="its-gossip-time-who-goes-well-together">It’s gossip time : who goes well together?</h3>
-<p>6 ### Spice it up : The return of celebrity chess with even more collaboration 9 ## It’s a bit more twisted than your average plot twist : internal factors 7, 5 ## What’s life without even more complications : external factors 10 ## Divining the future : it’s crystal ball time 8 ## Ending credits</p>
+<h3 id="its-gossip-time-whos-the-power-duo-in-hollywood">It’s gossip time : who’s the power duo in Hollywood ?</h3>
+<p>Our quest to unveil the secrets of successful actor clusters involved a battery of t-tests. We dissected everything from gender dynamics to how often these stars collabprated on set. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.</p>
+<p>The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned pros bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?</p>
+<h3 id="spice-it-up-the-return-of-celebrity-chess-with-even-more-collaboration">Spice it up : The return of celebrity chess with even more collaboration</h3>
+<p>Adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they’re already part of the network.</p>
+<p>As for composers, they’re practically tied at the hip with one or a select few directors. In fact, in the plot there are a lot of two-node squads, starring a director and a composer, as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers, it is almost always a director that makes the bridge between clusters.</p>
+<h2 id="its-a-bit-more-twisted-than-your-average-plot-twist-internal-factors">It’s a bit more twisted than your average plot twist : internal factors</h2>
+<p>We observe that for each figure, the average movie rating for the biggest category is around 6.45.</p>
+<p>Both the age and film count difference has high variability when the difference is big due to the small number of movies. Otherwise it averages around 6.5 pretty consistently.</p>
+<p>Whether it is the first film for one of the actors or for both does not have a significant impact on the average rating. The difference in average rating is around 0.1 in both cases.</p>
+<p>When looking at the number of films a pair of actors have done together, we observe a small increase in the average rating up to 5 films. After that, the average rating decreases slightly and no particular trend emerges.</p>
+<p>Two genres have a remarkable lower average rating than the rest: Softcore Porn and Space opera with 2.4 and 2.5 respectively. On the contrary, some genres neighbour the 8.0 average rating mark: Anti-war, Culture &amp; Society, Film à clef, Tragedy and Reboot. The latter contains only three movies, thus it is less interesting. For the other, we have a least 50 movies per genre. Hence, these genres seem to be the most appreciated by the users.</p>
+<p>7, 5</p>
+<h2 id="divining-the-future-its-crystal-ball-time">Divining the future : it’s crystal ball time</h2>
+<p>8</p>
+<h2 id="ending-credits">Ending credits</h2>
 <h1 id="research-questions">Research questions</h1>
 <ol type="1">
 <li><p><strong>How does the frequency of actor co-starring impact the chemistry and success of collaborative films?</strong></p></li>
