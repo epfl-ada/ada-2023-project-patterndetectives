@@ -44,9 +44,9 @@ table:Average movie rating of their best 5 movies (10 best actors)
 As you can see, there is no common ground between the two leaderboards. To bring some clarity, let's introduce a few metrics:
 
 - Rank percentile : Movies undergo a rating-based ranking, and to distinguish them within the same rating category, the movie boasting the highest revenue is deemed more successful, securing a superior rank. The rankings are subsequently normalized to obtain a rank percentile ranging between 0 and 1.
-- Actor score : the average of the rank percentile of the actor top 5 movies.
+- Actor score : the average of the rank percentile of the actor top 5 movies. To be a successful actor, one needs to be in the best 40% (and thus their actor score is 0.6 or above).
 
-Let's now try to compare the movies ranking and their actors score. We are making the hypothesis that some actors have an unobservable quality that would make their film successful.
+Here is the list of the most successful actors :
 
 | Actor_name         |   Actor_score |
 |:-------------------|--------------:|
@@ -71,6 +71,13 @@ Let's now try to compare the movies ranking and their actors score. We are makin
 | Alfred Hitchcock   |      0.98147  |
 | R. Lee Ermey       |      0.981269 |
 
+Now, we wonder how many movies does a successful actor make on average ?
+<iframe src="graphs/number_of_movie_for_successful_actor.html"></iframe>
+Thus successful actors have a longer career with more movies
+
+Do individual actors make a movie more successful?
+<iframe src="graphs/success_of_movies.html"></iframe>
+As we can observe, it seems that successful actors make a movie more successful. However a t test is needed to confirm.
 **Pas fini**
 
 ## Tell me Johnny, who do you see often ?
@@ -106,84 +113,84 @@ This network also shows that prominent actors within major clusters frequently c
 
 #### For the network based on revenue ratings:
 
-<div id="carouselRevenue" class="carousel slide" data-ride="true"> <!-- Revenue-->
-    <ol class="carousel-indicators">
-      <li data-target="#carouselRevenue" data-slide-to="0" class="active"></li>
-      <li data-target="#carouselRevenue" data-slide-to="1"></li>
-      <li data-target="#carouselRevenue" data-slide-to="2"></li>
-      <li data-target="#carouselRevenue" data-slide-to="3"></li>
-      <li data-target="#carouselRevenue" data-slide-to="4"></li>
-      <li data-target="#carouselRevenue" data-slide-to="5"></li>
-      <li data-target="#carouselRevenue" data-slide-to="6"></li>
-      <li data-target="#carouselRevenue" data-slide-to="7"></li>
-      <li data-target="#carouselRevenue" data-slide-to="8"></li>
-    </ol>
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img class="d-block w-100" src="graphs/Network_png/1980_1985_rev.png" alt="1980-1985 revenue">
-        <div class="carousel-caption d-none d-md-block">
+<div id="carouselRevenue" class="carousel slide" data-ride="carousel"> <!-- Revenue-->
+  <ol class="carousel-indicators">
+    <li data-target="#carouselRevenue" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselRevenue" data-slide-to="1"></li>
+    <li data-target="#carouselRevenue" data-slide-to="2"></li>
+    <li data-target="#carouselRevenue" data-slide-to="3"></li>
+    <li data-target="#carouselRevenue" data-slide-to="4"></li>
+    <li data-target="#carouselRevenue" data-slide-to="5"></li>
+    <li data-target="#carouselRevenue" data-slide-to="6"></li>
+    <li data-target="#carouselRevenue" data-slide-to="7"></li>
+    <li data-target="#carouselRevenue" data-slide-to="8"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="graphs/Network_png/1980_1985_rev.png" alt="1980-1985 revenue">
+      <div class="carousel-caption d-none d-md-block">
         <h5>1980-1985</h5>
         <p>Colors indicate the success of the collaboration based on movie revenue</p>
       </div>
-      </div>
-      <div class="carousel-item">
-        <img class="d-block w-100" src="graphs/Network_png/1980_1990_rev.png" alt="1980-1990 revenue">
-        <div class="carousel-caption d-none d-md-block">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="graphs/Network_png/1980_1990_rev.png" alt="1980-1990 revenue">
+      <div class="carousel-caption d-none d-md-block">
         <h5>1980-1990</h5>
         <p>Colors indicate the success of the collaboration based on movie revenue</p>
       </div>
-      </div>
-      <div class="carousel-item">
-        <img class="d-block w-100" src="graphs/Network_png/1980_1995_rev.png" alt="1980-1995 revenue">
-        <div class="carousel-caption d-none d-md-block">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="graphs/Network_png/1980_1995_rev.png" alt="1980-1995 revenue">
+      <div class="carousel-caption d-none d-md-block">
         <h5>1980-1995</h5>
         <p>Colors indicate the success of the collaboration based on movie revenue</p>
       </div>
-      </div>
-      <div class="carousel-item">
-        <img class="d-block w-100" src="graphs/Network_png/1980_2000_rev.png" alt="1980-2000 revenue">
-        <div class="carousel-caption d-none d-md-block">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="graphs/Network_png/1980_2000_rev.png" alt="1980-2000 revenue">
+      <div class="carousel-caption d-none d-md-block">
         <h5>1980-2000</h5>
         <p>Colors indicate the success of the collaboration based on movie revenue</p>
       </div>
-      </div>
-      <div class="carousel-item">
-        <img class="d-block w-100" src="graphs/Network_png/1980_2005_rev.png" alt="1980-2005 revenue">
-        <div class="carousel-caption d-none d-md-block">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="graphs/Network_png/1980_2005_rev.png" alt="1980-2005 revenue">
+      <div class="carousel-caption d-none d-md-block">
         <h5>1980-2005</h5>
         <p>Colors indicate the success of the collaboration based on movie revenue</p>
       </div>
-      </div>
-      <div class="carousel-item">
-        <img class="d-block w-100" src="graphs/Network_png/1980_2010_rev.png" alt="1980-2010 revenue">
-        <div class="carousel-caption d-none d-md-block">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="graphs/Network_png/1980_2010_rev.png" alt="1980-2010 revenue">
+      <div class="carousel-caption d-none d-md-block">
         <h5>1980-2010</h5>
         <p>Colors indicate the success of the collaboration based on movie revenue</p>
       </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="graphs/Network_png/1980_2015_rev.png" alt="1980-2015 revenue">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>1980-2015</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
       </div>
-      <div class="carousel-item">
-        <img class="d-block w-100" src="graphs/Network_png/1980_2015_rev.png" alt="1980-2015 revenue">
-        <div class="carousel-caption d-none d-md-block">
-          <h5>1980-2015</h5>
-          <p>Colors indicate the success of the collaboration based on movie revenue</p>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img class="d-block w-100" src="graphs/Network_png/1980_2020_rev.png" alt="1980-2020 revenue">
-        <div class="carousel-caption d-none d-md-block">
-          <h5>1980-2020</h5>
-          <p>Colors indicate the success of the collaboration based on movie revenue</p>
-        </div>
-      </div>
-    <a class="carousel-control-prev" href="#carouselRevenue" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselRevenue" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="graphs/Network_png/1980_2020_rev.png" alt="1980-2020 revenue">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>1980-2020</h5>
+        <p>Colors indicate the success of the collaboration based on movie revenue</p>
+    </div>
   </div>
+  <a class="carousel-control-prev" href="#carouselRevenue" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselRevenue" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
 
 The cluster formations in this network are largely similar to the first, but with notable differences in the color scheme employed. Larger clusters tend to exhibit pinker hues, suggesting higher profitability. Contrarily, large clusters with brown coloring are rare ; the brown coloring is mostly found among smaller groups with fewer actors. This pattern suggests a correlation between the length and success of an actor's career and their network's size: a broader network implies more varied collaborations, potentially leading to roles in higher-revenue films.
 

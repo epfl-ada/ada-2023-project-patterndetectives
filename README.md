@@ -138,4 +138,4 @@ The collaboration plan was respected, everyone answered their question except fo
 
 - Keren Bensoussan: Worked on the website, answered question 1 and 2 with Julien and wrote the datastory based on the answers of the other members of the group.
 
-- Julien Ars:
+- Julien Ars: Worked on the website, answered question 1 and 2 with Keren and wrote the datastory based on the answers of the other members of the group.
