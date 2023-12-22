@@ -20,7 +20,7 @@ AS we can see blablabla
 --
 
 ## Tell me Johnny, who do you see often ?
-These actors practically have each other on speed dial with their frequent collaborations.
+These actors practically have each other on speed dial with their frequent collaborations. However, as we can observe in the plot below, the average Joe couldn't care less about their on-screen rendezvous. The frequency of actor co-starring doesn't impact their movie ratings. Hollywood, take note: chemistry doesn't always translate to critical acclaim, darling!
 
 ## Let's play celebrity chess !
 Get ready to play a round of celebrity chess as we unravel the patterns in Hollywood's grand game of actor collaboration networks. It's not just about moves on the board; it's a strategic dance of connections, rivalries, and who's stealing the spotlight on the chessboard. Let the games begin!
@@ -29,10 +29,11 @@ Get ready to play a round of celebrity chess as we unravel the patterns in Holly
 ### Time traveling in the movie industry
 4
 
-### It's gossip time : who goes well together?
-6
-In our investigation to identify the key traits of successful actor clusters, we employed a series of t-tests to assess various attributes within our dataset, including gender disparity, the frequency of film collaborations between actor pairs, and several other factors. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.
+### It's gossip time : who's the power duo in Hollywood ?
+Our quest to unveil the secrets of successful actor clusters involved a battery of t-tests. We dissected everything from gender dynamics to how often these stars collabprated on set. Notably, the only attribute that yielded a statistically significant result (with a p-value below 0.05) was the age difference between pairs of actors.
 
+
+The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned pros bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
 
 The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. It is important to emphasize that a lower average rank signifies greater success. The plot reveals a discernible trend: clusters with lower ranks tend to exhibit a marginally higher age disparity, suggesting a broader age range among members of these clusters. This variation in age could be indicative of the beneficial impact of seasoned actors, who potentially contribute greater experience and knowledge to the ensemble.
 
