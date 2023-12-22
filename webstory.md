@@ -35,9 +35,9 @@ Our quest to unveil the secrets of successful actor clusters involved a battery 
 
 The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. Remember, lower ranks mean higher success ! And it appears that the groups with lower average ranks have a broader age range among them. In simpler terms, those seasoned pros bring more value to the group, possibly leveraging their wealth of experience and knowledge. Age before beauty, anyone?
 
-The accompanying plot organizes clusters based on their average ranks, with the more successful clusters (denoted by lower average ranks) positioned on the left, and the less successful ones (indicated by higher average ranks) on the right. It is important to emphasize that a lower average rank signifies greater success. The plot reveals a discernible trend: clusters with lower ranks tend to exhibit a marginally higher age disparity, suggesting a broader age range among members of these clusters. This variation in age could be indicative of the beneficial impact of seasoned actors, who potentially contribute greater experience and knowledge to the ensemble.
-
 ### Spice it up : The return of celebrity chess with even more collaboration
+Adding directors and composers do not lead to a significant change in the collaborative network. Some well-known directors pull double duty as actors, so they're already part of the network. As for composers, they're practically tied at the hip with one or a select few directors. No surprises there; directors have their ride-or-die composers. When we get into the nitty-gritty of clustering nodes with just directors and composers, guess who's stealing the spotlight? Yep, it's almost always a director playing the bridge between clusters. We've got these cute little two-node squads, starring a director and a composer, exactly like we spilled the tea about earlier. It's like the director-composer duo is the power couple of the film world, making all the right connections.
+
 Adding directors and composers do not lead to a significant change in the collaborative network. As some well known directors are also actors, they are already part of the network. For composers, they are highly tied to one or a few directors. It is expected as directors tend to keep the same composer for their movies. When clustering the nodes only on directors and composers we find that it is almost always a director that make the bridge between clusters. There a lot of 2 nodes clusters composed of one director and one composer, which agrees with what we said before.
 
 ## It's a bit more twisted than your average plot twist : internal factors
@@ -53,8 +53,7 @@ When looking at the number of films a pair of actors have done together, we obse
 Two genres have a remarkable lower average rating than the rest: Softcore Porn and Space opera with 2.4 and 2.5 respectively. On the contrary, some genres neighbour the 8.0 average rating mark: Anti-war, Culture & Society, Film à clef, Tragedy and Reboot. The latter contains only three movies, thus it is less interesting. For the other, we have a least 50 movies per genre. Hence, these genres seem to be the most appreciated by the users.
 
 7, 5
-## What's life without even more complications : external factors
-10
+
 ## Divining the future : it's crystal ball time
 8
 
